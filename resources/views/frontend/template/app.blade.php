@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>@yield('title', 'SMP Negeri 20 Kendari')</title>
+
+    <!-- Tailwind & Font Awesome -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
-        /* HP Mode aja (lebar <= 768px) */
+        /* Responsive HP */
         @media (max-width: 768px) {
             main {
                 display: flex !important;
@@ -19,63 +20,22 @@
                 padding-left: 1rem;
                 padding-right: 1rem;
             }
-
-            main>* {
+            main > * {
                 width: 100% !important;
                 max-width: 100% !important;
-            }
-
-            main aside,
-            main section {
-                order: unset !important;
-            }
-
-            main aside:last-child {
-                display: block !important;
             }
         }
     </style>
 </head>
-
 <body class="bg-gray-100 font-sans">
 
-    <!-- Header & Navbar -->
+    <!-- Navbar -->
     <header class="bg-gray-900 text-white">
         @include('frontend.template.navbar')
     </header>
 
-    <!-- Dropdown Hover Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const menus = [
-                { area: 'profilDropdownArea', menu: 'profilDropdown' },
-                { area: 'kurikulumDropdownArea', menu: 'kurikulumDropdown' },
-                { area: 'prestasiDropdownArea', menu: 'prestasiDropdown' },
-                { area: 'artikelDropdownArea', menu: 'artikelDropdown' }
-            ];
-
-            menus.forEach(({ area, menu }) => {
-                const areaEl = document.getElementById(area);
-                const menuEl = document.getElementById(menu);
-
-                if (areaEl && menuEl) {
-                    areaEl.addEventListener('mouseenter', () => menuEl.classList.remove('hidden'));
-                    areaEl.addEventListener('mouseleave', () => {
-                        setTimeout(() => {
-                            if (!menuEl.matches(':hover')) {
-                                menuEl.classList.add('hidden');
-                            }
-                        }, 150);
-                    });
-                    menuEl.addEventListener('mouseleave', () => menuEl.classList.add('hidden'));
-                }
-            });
-        });
-    </script>
-
-    <!-- Main Layout -->
+    <!-- Isi halaman -->
     <main class="max-w-7xl mx-auto grid grid-cols-12 gap-6 mt-6 px-4">
-
         {{-- Sidebar kiri --}}
         @includeIf('frontend.template.leftbar')
 
@@ -84,13 +44,37 @@
 
         {{-- Sidebar kanan --}}
         @includeIf('frontend.template.rightbar')
-
     </main>
 
-    {{-- Footer --}}
+    <!-- Footer -->
     @includeIf('frontend.template.footer')
 
-    <!-- Kalender Script -->
+    <!-- Script Dropdown -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const menus = [
+                { area: 'profilDropdownArea', menu: 'profilDropdown' },
+                { area: 'kurikulumDropdownArea', menu: 'kurikulumDropdown' },
+                { area: 'prestasiDropdownArea', menu: 'prestasiDropdown' },
+                { area: 'artikelDropdownArea', menu: 'artikelDropdown' }
+            ];
+            menus.forEach(({ area, menu }) => {
+                const areaEl = document.getElementById(area);
+                const menuEl = document.getElementById(menu);
+                if (areaEl && menuEl) {
+                    areaEl.addEventListener('mouseenter', () => menuEl.classList.remove('hidden'));
+                    areaEl.addEventListener('mouseleave', () => {
+                        setTimeout(() => {
+                            if (!menuEl.matches(':hover')) menuEl.classList.add('hidden');
+                        }, 150);
+                    });
+                    menuEl.addEventListener('mouseleave', () => menuEl.classList.add('hidden'));
+                }
+            });
+        });
+    </script>
+
+    <!-- Script Kalender -->
     <script>
         const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
         const weekdaysShort = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
@@ -100,7 +84,7 @@
 
         function generateCalendar(month, year) {
             const calendar = document.getElementById("calendar");
-            if (!calendar) return; // biar ga error kalo kalender ga ada di halaman
+            if (!calendar) return;
 
             const firstDayOfMonth = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
