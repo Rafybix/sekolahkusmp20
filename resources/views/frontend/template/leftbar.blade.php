@@ -1,20 +1,59 @@
 <aside class="col-span-3 space-y-6">
-    <!-- Kepala Sekolah -->
-    <div class="bg-white shadow rounded-xl p-5">
-        <h2 class="text-gray-700 font-semibold mb-3">Kepala Sekolah</h2>
-        <img src="{{ asset('assets/img/kepala-sekolah.jpg') }}"
-            alt="Kepala Sekolah" class="rounded-lg mb-3">
-        <h3 class="font-bold text-gray-700">Wa Ode Nurhafiah S.Pd</h3>
-        <p class="text-gray-600 text-sm mt-1">Nip.19760612 200212 2 010</p>
-        <hr class="border-t border-gray-300 my-4 opacity-70">
-        <p class="text-sm text-gray-700 mt-3 font-semibold">Ikuti Kami:</p>
-        <div class="flex space-x-3 mt-2 text-gray-600 text-lg">
-            <a href="" class="hover:text-pink-500"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="hover:text-blue-600"><i class="fab fa-facebook"></i></a>
-            <a href="#" class="hover:text-sky-500"><i class="fab fa-twitter"></i></a>
-            <a href="https://www.youtube.com/channel/UC6Ch-ozwmR80eepmeACxE1g/videos" class="hover:text-red-600"><i class="fab fa-youtube"></i></a>
-        </div>
+   <!-- Kepala Sekolah -->
+<div class="bg-white shadow rounded-xl p-5">
+  <h2 class="text-gray-700 font-semibold mb-3">Kepala Sekolah</h2>
+
+  @if ($kepala)
+    <div class="text-center">
+      <!-- FOTO (versi kotak) -->
+      <img src="{{ asset('storage/' . $kepala->foto) }}"
+           alt="{{ $kepala->nama }}"
+           class="w-40 h-48 mx-auto mb-3 shadow-md object-cover rounded-lg border border-gray-200">
+
+      <!-- NAMA DAN NIP -->
+      <h3 class="font-bold text-gray-800 text-lg">{{ $kepala->nama }}</h3>
+      @if ($kepala->nip)
+        <p class="text-gray-600 text-sm">NIP. {{ $kepala->nip }}</p>
+      @endif
+
+      <!-- GARIS PEMBATAS -->
+      <hr class="border-t border-gray-300 my-4 opacity-70">
+
+      <!-- SAMBUTAN SINGKAT -->
+      @if ($kepala->sambutan)
+        <p class="text-gray-700 text-sm leading-relaxed">
+          {{ Str::limit(strip_tags($kepala->sambutan), 100) }}
+        </p>
+      @endif
+
+      <!-- MEDIA SOSIAL -->
+      <p class="text-sm text-gray-700 mt-4 font-semibold">Ikuti Kami:</p>
+      <div class="flex justify-center space-x-4 mt-2 text-gray-600 text-xl">
+        @if ($kepala->instagram)
+          <a href="{{ $kepala->instagram }}" target="_blank" class="hover:text-pink-500">
+            <i class="fab fa-instagram"></i>
+          </a>
+        @endif
+        @if ($kepala->facebook)
+          <a href="{{ $kepala->facebook }}" target="_blank" class="hover:text-blue-600">
+            <i class="fab fa-facebook"></i>
+          </a>
+        @endif
+        @if ($kepala->youtube)
+          <a href="{{ $kepala->youtube }}" target="_blank" class="hover:text-red-600">
+            <i class="fab fa-youtube"></i>
+          </a>
+        @endif
+      </div>
     </div>
+  @else
+    <p class="text-gray-500 text-sm text-center">Data kepala sekolah belum tersedia.</p>
+  @endif
+</div>
+
+
+
+
 
     <!-- Berita Terbaru -->
     <div class="bg-white shadow rounded-xl p-5">

@@ -45,61 +45,175 @@
   </button>
 </div>
 
+<!-- SEMUA BERITA -->
+<div id="semuaBerita" class="mt-10 space-y-5">
+    <h2 class="text-xl font-bold text-gray-800 border-l-4 border-blue-600 pl-3 mb-4">
+        Semua Berita
+    </h2>
 
-  <!-- DAFTAR BERITA -->
-  <div id="daftarBerita" class="space-y-5">
-    <!-- ITEM BERITA -->
-    <div class="berita bg-white shadow rounded-xl p-5 flex gap-5 hover:shadow-lg transition duration-300"
-         data-tanggal="14" data-bulan="04" data-tahun="2022">
-      <img src="https://images.unsplash.com/photo-1596495577886-d920f1fb7238?auto=format&fit=crop&w=300&q=80"
-           alt="Gambar Berita 1" class="w-28 h-28 object-cover rounded-lg">
-      <div>
-        <h3 class="text-lg font-bold text-gray-800 hover:text-blue-600 cursor-pointer">
-          PENILAIAN TENGAH SEMESTER GENAP SUSULAN TAHUN 2022
-        </h3>
-        <p class="text-sm text-gray-500 mb-2">
-          <span class="font-semibold text-blue-600">Kategori:</span> Berita • 2022-04-14 • 09:18 WIB
-        </p>
-        <p class="text-gray-700 leading-relaxed">
-          Assalamu’alaikum... Bagi siswa SMPN 20 Kendari yang belum mengikuti penilaian tengah semester, berikut link soal penilaian susulan.
-        </p>
-      </div>
-    </div>
+    @php
+        // Pastikan variabel tetap ada agar tidak error
+        $beritaTerbaru = $beritaTerbaru ?? collect();
+        $beritaLama = $beritaLama ?? collect();
+    @endphp
 
-    <div class="berita bg-white shadow rounded-xl p-5 flex gap-5 hover:shadow-lg transition duration-300"
-         data-tanggal="17" data-bulan="06" data-tahun="2021">
-      <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=300&q=80"
-           alt="Gambar Berita 2" class="w-28 h-28 object-cover rounded-lg">
-      <div>
-        <h3 class="text-lg font-bold text-gray-800 hover:text-blue-600 cursor-pointer">
-          PPDB SMPN 20 KENDARI TAHUN AJARAN 2021/2022
-        </h3>
-        <p class="text-sm text-gray-500 mb-2">
-          <span class="font-semibold text-blue-600">Kategori:</span> Berita • 2021-06-17 • 01:33 WIB
-        </p>
-        <p class="text-gray-700 leading-relaxed">
-          Penerimaan peserta didik baru SMP Negeri 20 Kendari untuk tahun pelajaran 2021/2022 telah dibuka. Segera daftar dan bergabung bersama kami!
-        </p>
-      </div>
-    </div>
+    <!-- Bagian Berita Terbaru -->
+    @if($beritaTerbaru->isNotEmpty())
+        <div class="space-y-5 mb-8">
+            <h3 class="text-lg font-semibold text-gray-700 border-l-4 border-green-600 pl-3">Berita Terbaru</h3>
+            @foreach($beritaTerbaru as $item)
+                <div class="bg-white shadow rounded-xl p-5 hover:shadow-lg transition duration-300">
+                    <h3 class="text-lg font-bold text-gray-800 hover:text-green-600">
+                        <a href="{{ route('berita.show', $item->id) }}">
+                            {{ strtoupper($item->judul ?? 'Judul Tidak Diketahui') }}
+                        </a>
+                    </h3>
+                    <p class="text-sm text-gray-500 mb-2">
+                        {{ $item->kategori->nama ?? 'Berita' }}
+                        • {{ $item->created_at?->format('d M Y') ?? '-' }}
+                    </p>
+                    <p class="text-gray-700">
+                        {{ \Illuminate\Support\Str::limit(strip_tags($item->isi ?? ''), 100, '...') }}
+                    </p>
+                </div>
+            @endforeach
+        </div>
+    @endif
 
-    <div class="berita bg-white shadow rounded-xl p-5 flex gap-5 hover:shadow-lg transition duration-300"
-         data-tanggal="05" data-bulan="06" data-tahun="2020">
-      <img src="https://images.unsplash.com/photo-1601933470928-c1b8b89b3e60?auto=format&fit=crop&w=300&q=80"
-           alt="Gambar Berita 3" class="w-28 h-28 object-cover rounded-lg">
-      <div>
-        <h3 class="text-lg font-bold text-gray-800 hover:text-blue-600 cursor-pointer">
-          PENGUMUMAN KELULUSAN KELAS IX SMPN 20 KENDARI TAHUN 2020
-        </h3>
-        <p class="text-sm text-gray-500 mb-2">
-          <span class="font-semibold text-blue-600">Kategori:</span> Berita • 2020-06-05 • 03:04 WIB
-        </p>
-        <p class="text-gray-700 leading-relaxed">
-          Pengumuman kelulusan kelas IX SMP Negeri 20 Kendari tahun pelajaran 2019/2020 akan diumumkan melalui website resmi pada Jumat, 5 Juni 2020 pukul 16.00 WITA.
-        </p>
-      </div>
+    @php
+use App\Models\Berita;
+use Illuminate\Support\Str;
+
+// Ambil semua berita aktif dengan paginasi 7 per halaman
+$semuaBerita = Berita::where('is_active', '0')
+    ->orderBy('created_at', 'desc')
+    ->paginate(7);
+@endphp
+
+<div class="news-event-area mt-10">
+    <div class="container">
+        <div class="row">
+            <!-- SEMUA BERITA -->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 news-inner-area">
+              
+
+                <ul class="news-wrapper list-unstyled" style="display: flex; flex-direction: column; gap: 20px;">
+                    @forelse ($semuaBerita as $item)
+                        <li 
+                            style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 20px; padding: 18px; background: #fff; border-radius: 10px; box-shadow: 0 3px 8px rgba(0,0,0,0.08); transition: all 0.3s ease-in-out;"
+                            onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 6px 14px rgba(0,0,0,0.12)';"
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 3px 8px rgba(0,0,0,0.08)';"
+                        >
+                            <!-- Gambar -->
+                            <div style="flex-shrink: 0; width: 180px; height: 120px; overflow: hidden; border-radius: 8px;">
+                                <a href="{{ route('detail.berita', $item->slug) }}">
+                                    <img 
+                                        src="{{ asset('storage/images/berita/' . ($item->thumbnail ?? 'default.jpg')) }}" 
+                                        alt="{{ $item->title ?? 'Berita' }}" 
+                                        style="width: 100%; height: 100%; object-fit: cover;"
+                                    >
+                                </a>
+                            </div>
+
+                            <!-- Konten -->
+                            <div style="flex: 1; min-width: 220px;">
+                                <h3 style="margin: 0; font-size: 1.1rem; font-weight: bold; line-height: 1.4;">
+                                    <a href="{{ route('detail.berita', $item->slug) }}" 
+                                       style="color: #1e3a8a; text-decoration: none;"
+                                       onmouseover="this.style.color='#2563eb';"
+                                       onmouseout="this.style.color='#1e3a8a';">
+                                        {{ $item->title ?? 'Judul Tidak Diketahui' }}
+                                    </a>
+                                </h3>
+
+                                <div style="color: #6b7280; font-size: 0.85rem; margin-top: 5px; display: flex; align-items: center; gap: 6px;">
+                                    <i class="fa-regular fa-calendar text-blue-500"></i>
+                                    {{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}
+                                </div>
+
+                                <!-- Isi berita singkat -->
+                                <p style="
+                                    margin-top: 10px; 
+                                    color: #374151; 
+                                    font-size: 0.9rem; 
+                                    line-height: 1.6;
+                                    display: -webkit-box;
+                                    -webkit-line-clamp: 3; /* Batas 3 baris */
+                                    -webkit-box-orient: vertical;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                ">
+                                    {{ strip_tags($item->isi ?? $item->content ?? 'Tidak ada isi berita') }}
+                                </p>
+
+                                <a href="{{ route('detail.berita', $item->slug) }}" 
+                                   style="font-size: 0.85rem; color: #2563eb; text-decoration: none; font-weight: 500;"
+                                   onmouseover="this.style.textDecoration='underline';"
+                                   onmouseout="this.style.textDecoration='none';">
+                                    Baca Selengkapnya →
+                                </a>
+                            </div>
+                        </li>
+                    @empty
+                        <li>
+                            <div style="background: #f9fafb; padding: 20px; border-radius: 8px; text-align: center; color: #6b7280;">
+                                Tidak ada berita untuk ditampilkan.
+                            </div>
+                        </li>
+                    @endforelse
+                </ul>
+
+                <!-- PAGINATION KUSTOM -->
+                @if ($semuaBerita->hasPages())
+                    <div class="mt-6 flex justify-center items-center gap-2 flex-wrap">
+                        {{-- Tombol Sebelumnya --}}
+                        @if ($semuaBerita->onFirstPage())
+                            <span style="padding: 8px 14px; border-radius: 6px; background: #e5e7eb; color: #9ca3af; font-size: 0.9rem;">← Sebelumnya</span>
+                        @else
+                            <a href="{{ $semuaBerita->previousPageUrl() }}" 
+                               style="padding: 8px 14px; border-radius: 6px; background: #2563eb; color: #fff; font-size: 0.9rem; text-decoration: none;">
+                                ← Sebelumnya
+                            </a>
+                        @endif
+
+                        {{-- Nomor Halaman --}}
+                        @foreach ($semuaBerita->links()->elements[0] ?? range(1, $semuaBerita->lastPage()) as $page => $url)
+                            @if ($page == $semuaBerita->currentPage())
+                                <span style="padding: 8px 14px; border-radius: 6px; background: #2563eb; color: #fff; font-weight: bold;">{{ $page }}</span>
+                            @else
+                                <a href="{{ $semuaBerita->url($page) }}" 
+                                   style="padding: 8px 14px; border-radius: 6px; background: #f3f4f6; color: #374151; text-decoration: none;"
+                                   onmouseover="this.style.background='#e5e7eb';"
+                                   onmouseout="this.style.background='#f3f4f6';">
+                                   {{ $page }}
+                                </a>
+                            @endif
+                        @endforeach
+
+                        {{-- Tombol Berikutnya --}}
+                        @if ($semuaBerita->hasMorePages())
+                            <a href="{{ $semuaBerita->nextPageUrl() }}" 
+                               style="padding: 8px 14px; border-radius: 6px; background: #2563eb; color: #fff; font-size: 0.9rem; text-decoration: none;">
+                                Berikutnya →
+                            </a>
+                        @else
+                            <span style="padding: 8px 14px; border-radius: 6px; background: #e5e7eb; color: #9ca3af; font-size: 0.9rem;">Berikutnya →</span>
+                        @endif
+                    </div>
+                @endif
+
+            </div>
+        </div>
     </div>
-  </div>
+</div>
+
+
+
+
+
+
+
+
 </section>
 @endsection
 

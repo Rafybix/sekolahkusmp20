@@ -116,21 +116,32 @@
                 <div id="calendar" class="text-center"></div>
             </div>
 
-            <!-- Recent Posts -->
-            <div class="bg-white shadow rounded-xl p-5">
-                <h2 class="text-gray-700 font-semibold mb-3">Recent Posts</h2>
-                <ul class="space-y-2 text-sm text-gray-700">
-                    <li><a href="#" class="hover:text-blue-600">Hari Pertama Pendistribusian MBG di SMA Negeri 2
-                            Demak</a></li>
-                    <li><a href="#" class="hover:text-blue-600">Pengawas Cabdin II Lakukan Pengarahan dan
-                            Supervisi</a></li>
-                    <li><a href="#" class="hover:text-blue-600">Upacara Bendera SMA Negeri 2 Demak Hadirkan
-                            Pembina</a></li>
-                    <li><a href="#" class="hover:text-blue-600">SMAN 2 Demak Meriahkan Karnaval HUT ke-80 RI</a>
-                    </li>
-                    <li><a href="#" class="hover:text-blue-600">Upacara HUT ke-80 Berlangsung Khidmat</a></li>
-                    <li><a href="#" class="hover:text-blue-600">Bupati Demak Hadiri Kick Off Cek Kesehatan
-                            Gratis</a></li>
-                </ul>
-            </div>
+            @php
+use App\Models\Berita;
+
+// Ambil hanya 12 berita terbaru aktif
+$recentPosts = Berita::where('is_active', '0')
+    ->orderBy('created_at', 'desc')
+    ->take(12)
+    ->get();
+@endphp
+
+<div class="bg-white shadow rounded-xl p-5">
+    <h2 class="text-gray-700 font-semibold mb-3">Recent Posts</h2>
+    <ul class="space-y-2 text-sm text-gray-700">
+        @forelse ($recentPosts as $post)
+            <li class="border-b border-gray-100 pb-1">
+                <a href="{{ route('detail.berita', $post->slug) }}" 
+                   class="hover:text-blue-600 transition-colors line-clamp-1">
+                   {{ $post->title ?? 'Judul Tidak Diketahui' }}
+                </a>
+            </li>
+        @empty
+            <li class="text-gray-500 text-sm italic">
+                Belum ada berita terbaru.
+            </li>
+        @endforelse
+    </ul>
+</div>
+
         </aside>

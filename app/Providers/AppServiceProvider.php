@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
+use App\Models\KepalaSekolah;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +25,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // Biar variabel $kepala otomatis tersedia di semua view
+        View::composer('*', function ($view) {
+            $kepala = KepalaSekolah::latest()->first();
+            $view->with('kepala', $kepala);
+        });
     }
 }

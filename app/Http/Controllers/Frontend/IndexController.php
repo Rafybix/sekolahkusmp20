@@ -17,6 +17,8 @@ use App\Models\User;
 use App\Models\Video;
 use App\Models\Visimisi;
 
+use App\Models\KepalaSekolah;
+
 class IndexController extends Controller
 {
     //Welcome
@@ -48,6 +50,7 @@ class IndexController extends Controller
         $footer = Footer::first();
 
         return view('frontend.welcome', compact('jurusanM','kegiatanM','slider','about','video','pengajar','berita','event','footer'));
+
     }
 
     // Berita
@@ -178,6 +181,14 @@ class IndexController extends Controller
     return view('frontend.welcome', compact('beritaTerbaru', 'berita', 'beritaSearch', 'query'));
 }
 
+ public function landingPage()
+    {
+        // Ambil data kepala sekolah terbaru
+        $kepala = KepalaSekolah::latest()->first();
+
+        // Kirim data ke halaman utama
+        return view('frontend.index', compact('kepala'));
+    }
 
 
 

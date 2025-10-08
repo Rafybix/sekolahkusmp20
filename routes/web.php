@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Berita;
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,9 +22,12 @@ use App\Models\Berita;
 
 // ======= FRONTEND ======= \\
 
+
+
 Route::get('/', [App\Http\Controllers\Frontend\IndexController::class, 'index'])->name('home');
 Route::get('/berita/search', [App\Http\Controllers\Frontend\IndexController::class, 'search'])
     ->name('berita.search');
+
 
     Route::get('/ajax/search', function (Request $request) {
     $query = $request->q;
@@ -45,6 +51,8 @@ Route::get('/berita/search', [App\Http\Controllers\Frontend\IndexController::cla
 
     return response()->json($data);
 })->name('berita.search');
+
+
 
 // ===== MENU PROFIL SEKOLAH =====
 Route::get('profile-sekolah', [App\Http\Controllers\Frontend\IndexController::class, 'profileSekolah'])->name('profile.sekolah');
@@ -109,6 +117,7 @@ Route::middleware('auth')->group(function () {
             'program-studi'           => Backend\Website\ProgramController::class,
             'backend-kegiatan'        => Backend\Website\KegiatanController::class,
             'backend-imageslider'     => Backend\Website\ImageSliderController::class,
+            'backend-kepalasekolah'     => Backend\Website\KepalaSekolahController::class,
             'backend-about'           => Backend\Website\AboutController::class,
             'backend-video'           => Backend\Website\VideoController::class,
             'backend-kategori-berita' => Backend\Website\KategoriBeritaController::class,

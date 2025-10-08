@@ -107,4 +107,9 @@ class BeritaController extends Controller
 
         return view('frontend.welcome', compact('beritaTerbaru', 'beritaLama'));
     }
+
+   
+
+
+
 }
