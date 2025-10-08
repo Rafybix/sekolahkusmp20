@@ -158,4 +158,27 @@ class IndexController extends Controller
         return view('frontend.content.visimisi', compact('visimisi','jurusanM','kegiatanM','pengajar','footer'));
     }
 
+    public function search(Request $request)
+{
+    $query = $request->input('q');
+
+    $beritaSearch = collect();
+
+    if ($query) {
+        $beritaSearch = \App\Models\Berita::where('title', 'like', "%{$query}%")
+            ->where('is_active', '0')
+            ->orderBy('created_at', 'desc')
+            ->take(4)
+            ->get();
+    }
+
+    $beritaTerbaru = \App\Models\Berita::where('is_active', '0')->latest()->take(5)->get();
+    $berita = \App\Models\Berita::where('is_active', '0')->get();
+
+    return view('frontend.welcome', compact('beritaTerbaru', 'berita', 'beritaSearch', 'query'));
+}
+
+
+
+
 }

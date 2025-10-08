@@ -14,137 +14,97 @@ use Auth;
 
 class BeritaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //Cek kategori
-        $kategori = KategoriBerita::where('is_Active','0')->get();
-
-        //Berita
+        $kategori = KategoriBerita::where('is_Active', '0')->get();
         $berita = Berita::all();
-        return view('backend.website.content.berita.index', compact('kategori','berita'));
+        return view('backend.website.content.berita.index', compact('kategori', 'berita'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        $kategori = KategoriBerita::where('is_Active','0')->get();
+        $kategori = KategoriBerita::where('is_Active', '0')->get();
         return view('backend.website.content.berita.create', compact('kategori'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(BeritaRequest $request)
     {
         try {
-
             $image = $request->file('thumbnail');
-            $nama_image = time()."_".$image->getClientOriginalName();
-            // isi dengan nama folder tempat kemana file diupload
+            $nama_image = time() . "_" . $image->getClientOriginalName();
             $tujuan_upload = 'public/images/berita';
-            $image->storeAs($tujuan_upload,$nama_image);
+            $image->storeAs($tujuan_upload, $nama_image);
 
-            // Create Slug
             $slug = Str::slug($request->title);
 
             $berita = new Berita;
-            $berita->title          = $request->title;
-            $berita->slug           = $slug;
-            $berita->content        = $request->content;    
-            $berita->kategori_id    = $request->kategori_id;
-            $berita->thumbnail      = $nama_image;
-            $berita->created_by     = Auth::id();
-            $berita->is_active      = '0';
+            $berita->title = $request->title;
+            $berita->slug = $slug;
+            $berita->content = $request->content;
+            $berita->kategori_id = $request->kategori_id;
+            $berita->thumbnail = $nama_image;
+            $berita->created_by = Auth::id();
+            $berita->is_active = '0';
             $berita->save();
 
-            Session::flash('success','Berita Berhasil ditambah !');
+            Session::flash('success', 'Berita Berhasil ditambah!');
             return redirect()->route('backend-berita.index');
-
-        }   catch (ErrorException $e) {
+        } catch (ErrorException $e) {
             throw new ErrorException($e->getMessage());
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        $kategori = KategoriBerita::where('is_Active','0')->get();
+        $kategori = KategoriBerita::where('is_Active', '0')->get();
         $berita = Berita::find($id);
-        return view('backend.website.content.berita.edit', compact('kategori','berita'));
+        return view('backend.website.content.berita.edit', compact('kategori', 'berita'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(BeritaRequest $request, $id)
     {
         try {
-
             if ($request->thumbnail) {
                 $image = $request->file('thumbnail');
-                $nama_image = time()."_".$image->getClientOriginalName();
-                // isi dengan nama folder tempat kemana file diupload
+                $nama_image = time() . "_" . $image->getClientOriginalName();
                 $tujuan_upload = 'public/images/berita';
-                $image->storeAs($tujuan_upload,$nama_image);
+                $image->storeAs($tujuan_upload, $nama_image);
             }
 
             $berita = Berita::find($id);
-            $berita->title          = $request->title;
-            $berita->slug           = $berita->slug;
-            $berita->content        = $request->content;    
-            $berita->kategori_id    = $request->kategori_id;
-            $berita->thumbnail      = $nama_image ?? $berita->thumbnail;
-            $berita->is_active      = $request->is_active;
+            $berita->title = $request->title;
+            $berita->slug = $berita->slug;
+            $berita->content = $request->content;
+            $berita->kategori_id = $request->kategori_id;
+            $berita->thumbnail = $nama_image ?? $berita->thumbnail;
+            $berita->is_active = $request->is_active;
             $berita->save();
 
-            Session::flash('success','Berita Berhasil diupdate !');
+            Session::flash('success', 'Berita Berhasil diupdate!');
             return redirect()->route('backend-berita.index');
-
-        }   catch (ErrorException $e) {
+        } catch (ErrorException $e) {
             throw new ErrorException($e->getMessage());
         }
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * === FRONTEND BERITA ===
      */
-    public function destroy($id)
+    public function tampilFrontend()
     {
-        //
+        // Ambil 5 berita terbaru
+        $beritaTerbaru = Berita::where('is_active', '0')
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
+        // Ambil berita lama setelah 5 terbaru
+        $beritaLama = Berita::where('is_active', '0')
+            ->orderBy('created_at', 'asc')
+            ->skip(5)
+            ->take(10)
+            ->get();
+
+        return view('frontend.welcome', compact('beritaTerbaru', 'beritaLama'));
     }
 }

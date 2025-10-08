@@ -3,7 +3,8 @@
 use App\Http\Controllers\Backend\SettingController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Http\Request;
+use App\Models\Berita;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,8 +15,36 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
+
+
 // ======= FRONTEND ======= \\
+
 Route::get('/', [App\Http\Controllers\Frontend\IndexController::class, 'index'])->name('home');
+Route::get('/berita/search', [App\Http\Controllers\Frontend\IndexController::class, 'search'])
+    ->name('berita.search');
+
+    Route::get('/ajax/search', function (Request $request) {
+    $query = $request->q;
+    $data = [];
+
+    if ($query) {
+        $data = Berita::where('title', 'like', "%{$query}%")
+            ->where('is_active', '0')
+            ->orderBy('created_at', 'desc')
+            ->take(4)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'title' => $item->title,
+                    'slug' => $item->slug,
+                    'thumbnail' => $item->thumbnail,
+                    'tanggal' => \Carbon\Carbon::parse($item->created_at)->translatedFormat('j F Y'),
+                ];
+            });
+    }
+
+    return response()->json($data);
+})->name('berita.search');
 
 // ===== MENU PROFIL SEKOLAH =====
 Route::get('profile-sekolah', [App\Http\Controllers\Frontend\IndexController::class, 'profileSekolah'])->name('profile.sekolah');

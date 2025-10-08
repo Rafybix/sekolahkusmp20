@@ -15,68 +15,86 @@
                 </div>
             </div>
 
-            <!-- Artikel -->
+         <!-- Artikel: Berita Lama -->
 
-            <hr class="border-t-4 border-black my-4">
-            <div class="grid grid-cols-2 gap-6">
-                <!-- Card 1 -->
-                <article class="bg-white shadow rounded-xl overflow-hidden flex flex-col">
-                    <img src="https://tse2.mm.bing.net/th/id/OIP.K9sCF2SaBxAscCd8zSRkLgHaE8?pid=Api&P=0&h=220"
-                        class="w-full h-40 object-cover">
-                    <div class="p-4 flex-1 flex flex-col">
-                        <h3 class="font-semibold text-gray-800">Selamat Datang di SMA Alur</h3>
-                        <p class="text-sm text-gray-500 flex items-center mt-1"><i
-                                class="far fa-calendar-alt mr-2"></i> 3 Oktober 2025</p>
-                        <p class="text-sm text-gray-600 mt-2 flex-1">Kami dengan bangga menyambut tahun ajaran baru
-                            dengan semangat dan dedikasi untuk memberikan pendidikan terbaik.</p>
-                        <a href="#"
-                            class="mt-3 inline-block text-center bg-gray-100 border border-gray-300 rounded-lg px-4 py-2 text-sm font-medium hover:bg-gray-200">Baca
-                            Selengkapnya</a>
-                    </div>
-                </article>
-                <!-- Card 2 -->
-                <article class="bg-white shadow rounded-xl overflow-hidden flex flex-col">
-                    <img src="https://tse2.mm.bing.net/th/id/OIP.K9sCF2SaBxAscCd8zSRkLgHaE8?pid=Api&P=0&h=220"
-                        class="w-full h-40 object-cover">
-                    <div class="p-4 flex-1 flex flex-col">
-                        <h3 class="font-semibold text-gray-800">Prestasi Siswa di Olimpiade Sains Nasional</h3>
-                        <p class="text-sm text-gray-500 flex items-center mt-1"><i
-                                class="far fa-calendar-alt mr-2"></i> 2 Oktober 2025</p>
-                        <p class="text-sm text-gray-600 mt-2 flex-1">Siswa-siswi SMA Alur meraih medali emas dan perak
-                            dalam kompetisi Olimpiade Sains Nasional tahun ini.</p>
-                        <a href="#"
-                            class="mt-3 inline-block text-center bg-gray-100 border border-gray-300 rounded-lg px-4 py-2 text-sm font-medium hover:bg-gray-200">Baca
-                            Selengkapnya</a>
-                    </div>
-                </article>
-                <!-- Card 3 -->
-                <article class="bg-white shadow rounded-xl overflow-hidden flex flex-col">
-                    <img src="https://i.ibb.co/0Vxq2Qh/artikel1.jpg" class="w-full h-40 object-cover">
-                    <div class="p-4 flex-1 flex flex-col">
-                        <h3 class="font-semibold text-gray-800">Program Ekstrakurikuler Baru</h3>
-                        <p class="text-sm text-gray-500 flex items-center mt-1"><i
-                                class="far fa-calendar-alt mr-2"></i> 1 Oktober 2025</p>
-                        <p class="text-sm text-gray-600 mt-2 flex-1">SMA Alur membuka berbagai ekstrakurikuler baru
-                            untuk mendukung bakat dan minat siswa.</p>
-                        <a href="#"
-                            class="mt-3 inline-block text-center bg-gray-100 border border-gray-300 rounded-lg px-4 py-2 text-sm font-medium hover:bg-gray-200">Baca
-                            Selengkapnya</a>
-                    </div>
-                </article>
-                <!-- Card 4 -->
-                <article class="bg-white shadow rounded-xl overflow-hidden flex flex-col">
-                    <img src="https://i.ibb.co/pWvsvK7/artikel2.jpg" class="w-full h-40 object-cover">
-                    <div class="p-4 flex-1 flex flex-col">
-                        <h3 class="font-semibold text-gray-800">Kunjungan Industri ke Perusahaan Teknologi</h3>
-                        <p class="text-sm text-gray-500 flex items-center mt-1"><i
-                                class="far fa-calendar-alt mr-2"></i> 30 September 2025</p>
-                        <p class="text-sm text-gray-600 mt-2 flex-1">Siswa berkesempatan belajar langsung di perusahaan
-                            teknologi ternama di Indonesia.</p>
-                        <a href="#"
-                            class="mt-3 inline-block text-center bg-gray-100 border border-gray-300 rounded-lg px-4 py-2 text-sm font-medium hover:bg-gray-200">Baca
-                            Selengkapnya</a>
-                    </div>
-                </article>
+@php
+    // Ambil parameter halaman dari URL (default 1)
+    $currentPage = request()->get('page', 1);
+
+    // Tentukan berapa berita per halaman
+    $perPage = 6;
+
+    // Hitung offset (mulai dari berita ke berapa)
+    $offset = ($currentPage - 1) * $perPage;
+
+    // Potong data berita sesuai halaman
+    $beritaPage = $berita->slice($offset, $perPage);
+
+    // Hitung total halaman
+    $totalPages = ceil($berita->count() / $perPage);
+@endphp
+
+<div class="grid grid-cols-2 gap-6">
+    @foreach ($beritaPage as $item)
+        <article class="bg-white shadow rounded-xl overflow-hidden flex flex-col">
+            <img src="{{ asset('storage/images/berita/' . $item->thumbnail) }}"
+                 alt="{{ $item->title }}"
+                 class="w-full h-40 object-cover">
+
+            <div class="p-4 flex-1 flex flex-col">
+                <h3 class="font-semibold text-gray-800">{{ $item->title }}</h3>
+
+                <p class="text-sm text-gray-500 flex items-center mt-1">
+                    <i class="far fa-calendar-alt mr-2"></i>
+                    {{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('j F Y') }}
+                </p>
+
+                <p class="text-sm text-gray-600 mt-2 flex-1">
+                    {{ Str::limit(strip_tags($item->content), 100, '...') }}
+                </p>
+
+                <a href="{{ route('detail.berita', $item->slug) }}"
+                   class="mt-3 inline-block text-center bg-gray-100 border border-gray-300 rounded-lg px-4 py-2 text-sm font-medium hover:bg-gray-200">
+                   Baca Selengkapnya
+                </a>
             </div>
+        </article>
+    @endforeach
+</div>
+
+<!-- PAGINATION -->
+@if ($totalPages > 1)
+    <div class="mt-6 flex justify-center items-center space-x-2">
+        {{-- Tombol Sebelumnya --}}
+        @if ($currentPage > 1)
+            <a href="?page={{ $currentPage - 1 }}"
+               class="px-3 py-1 border rounded-lg text-sm bg-gray-100 hover:bg-gray-200">
+                &laquo; Sebelumnya
+            </a>
+        @endif
+
+        {{-- Nomor Halaman --}}
+        @for ($page = 1; $page <= $totalPages; $page++)
+            <a href="?page={{ $page }}"
+               class="px-3 py-1 border rounded-lg text-sm 
+                      {{ $page == $currentPage ? 'bg-blue-600 text-white' : 'bg-white hover:bg-gray-100' }}">
+                {{ $page }}
+            </a>
+        @endfor
+
+        {{-- Tombol Berikutnya --}}
+        @if ($currentPage < $totalPages)
+            <a href="?page={{ $currentPage + 1 }}"
+               class="px-3 py-1 border rounded-lg text-sm bg-gray-100 hover:bg-gray-200">
+                Berikutnya &raquo;
+            </a>
+        @endif
+    </div>
+@endif
+
+
+
+
+
         </section>
 @endsection
