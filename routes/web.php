@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Berita;
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,6 +22,8 @@ use App\Models\Berita;
 */
 
 // ======= FRONTEND ======= \\
+
+
 
 Route::get('/', [App\Http\Controllers\Frontend\IndexController::class, 'index'])->name('home');
 Route::get('/berita/search', [App\Http\Controllers\Frontend\IndexController::class, 'search'])->name('berita.search');
@@ -46,6 +50,8 @@ Route::get('/ajax/search', function (Request $request) {
 
     return response()->json($data);
 })->name('berita.search');
+
+
 
 // ===== MENU PROFIL SEKOLAH =====
 Route::get('profile-sekolah', [App\Http\Controllers\Frontend\IndexController::class, 'profileSekolah'])->name('profile.sekolah');
@@ -83,6 +89,7 @@ Route::get('/index', fn() => view('frontend.index'))->name('index');
 // ======= BACKEND (ADMIN) ======= \\
 Auth::routes(['register' => false]);
 
+// ======= BACKEND ======= \\
 Route::middleware('auth')->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -98,6 +105,8 @@ Route::middleware('auth')->group(function () {
 
     // CHANGE PASSWORD
     Route::put('profile-settings/change-password/{id}', [App\Http\Controllers\Backend\ProfileController::class, 'changePassword'])->name('profile.change-password');
+
+    Route::resource('backend-footer', Backend\Website\FooterController::class);
 
     // ===== ADMIN =====
     Route::prefix('/')->middleware('role:Admin')->group(function () {

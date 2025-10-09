@@ -2,48 +2,135 @@
 @section('content')
 {{-- INDEX BERITA --}}
 <section class="col-span-6 space-y-6">
-  <!-- JUDUL HALAMAN -->
-  <div class="bg-white shadow rounded-xl p-4 flex items-center gap-2 border-l-4 border-blue-500">
-    <i class="fa-solid fa-newspaper text-blue-500 text-xl"></i>
-    <h2 class="text-2xl font-bold text-gray-800">Index Berita</h2>
-  </div>
+@php
+    $kategori = \App\Models\KategoriBerita::orderBy('nama', 'asc')->get();
 
-  <!-- FILTER PENCARIAN -->
-<div class="bg-white p-4 rounded-xl shadow flex flex-wrap gap-3 items-center text-sm">
-  <input id="searchInput" 
-         type="text" 
-         placeholder="Cari berita..." 
-         class="border rounded-lg px-2 py-1 w-full sm:w-52 focus:ring focus:ring-blue-300 outline-none">
+    $tanggal = request('tanggal');
+    $bulan = request('bulan');
+    $tahun = request('tahun');
+    $kategori_id = request('kategori');
 
-  <select id="filterTanggal" class="border rounded-lg px-2 py-1 focus:ring focus:ring-blue-300 w-20">
+    // 🔹 Cek apakah ada filter aktif
+    $adaFilter = $tanggal || $bulan || $tahun || $kategori_id;
+
+    $query = \App\Models\Berita::query()->with('kategori');
+
+    if ($tanggal) $query->whereDay('created_at', $tanggal);
+    if ($bulan) $query->whereMonth('created_at', $bulan);
+    if ($tahun) $query->whereYear('created_at', $tahun);
+    if ($kategori_id) $query->where('kategori_id', $kategori_id);
+
+    // 🔹 Kalau ada filter → ambil berita
+    // 🔹 Kalau tidak ada → kosong (supaya reset bersih)
+    $berita = $adaFilter
+        ? $query->orderBy('created_at', 'desc')->get()
+        : collect();
+@endphp
+
+<!-- 📰 JUDUL HALAMAN -->
+<div class="bg-white shadow rounded-xl p-4 flex items-center gap-2 border-l-4 border-blue-500">
+  <i class="fa-solid fa-newspaper text-blue-500 text-xl"></i>
+  <h2 class="text-2xl font-bold text-gray-800">Daftar Berita</h2>
+</div>
+
+<!-- 🔍 FORM FILTER -->
+<form method="GET" action="{{ url()->current() }}" 
+      class="bg-white p-4 rounded-xl shadow flex flex-wrap gap-3 items-center text-sm mt-3">
+
+  <select name="tanggal" class="border rounded-lg px-2 py-1 focus:ring focus:ring-blue-300 w-20">
     <option value="">Tgl</option>
     @for ($i = 1; $i <= 31; $i++)
-      <option value="{{ sprintf('%02d', $i) }}">{{ $i }}</option>
+      <option value="{{ sprintf('%02d', $i) }}" {{ request('tanggal') == sprintf('%02d', $i) ? 'selected' : '' }}>
+        {{ $i }}
+      </option>
     @endfor
   </select>
 
-  <select id="filterBulan" class="border rounded-lg px-2 py-1 focus:ring focus:ring-blue-300 w-28">
+  <select name="bulan" class="border rounded-lg px-2 py-1 focus:ring focus:ring-blue-300 w-28">
     <option value="">Bulan</option>
     @php
-      $bulan = ['01'=>'Jan','02'=>'Feb','03'=>'Mar','04'=>'Apr','05'=>'Mei','06'=>'Jun','07'=>'Jul','08'=>'Agu','09'=>'Sep','10'=>'Okt','11'=>'Nov','12'=>'Des'];
+      $bulan = [
+        '01'=>'Jan','02'=>'Feb','03'=>'Mar','04'=>'Apr','05'=>'Mei','06'=>'Jun',
+        '07'=>'Jul','08'=>'Agu','09'=>'Sep','10'=>'Okt','11'=>'Nov','12'=>'Des'
+      ];
     @endphp
     @foreach ($bulan as $num => $nama)
-      <option value="{{ $num }}">{{ $nama }}</option>
+      <option value="{{ $num }}" {{ request('bulan') == $num ? 'selected' : '' }}>{{ $nama }}</option>
     @endforeach
   </select>
 
-  <select id="filterTahun" class="border rounded-lg px-2 py-1 focus:ring focus:ring-blue-300 w-24">
+  <select name="tahun" class="border rounded-lg px-2 py-1 focus:ring focus:ring-blue-300 w-24">
     <option value="">Tahun</option>
     @for ($i = 2020; $i <= date('Y'); $i++)
-      <option value="{{ $i }}">{{ $i }}</option>
+      <option value="{{ $i }}" {{ request('tahun') == $i ? 'selected' : '' }}>{{ $i }}</option>
     @endfor
   </select>
 
-  <button id="filterBtn" 
+  <select name="kategori" class="border rounded-lg px-2 py-1 focus:ring focus:ring-blue-300 w-40">
+    <option value="">Semua Kategori</option>
+    @foreach ($kategori as $kat)
+      <option value="{{ $kat->id }}" {{ request('kategori') == $kat->id ? 'selected' : '' }}>
+        {{ $kat->nama }}
+      </option>
+    @endforeach
+  </select>
+
+  <button type="submit" 
           class="bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 transition text-sm">
     Lihat
   </button>
+
+  <a href="{{ url()->current() }}" 
+     class="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg hover:bg-gray-300 transition text-sm">
+    Reset
+  </a>
+</form>
+
+<!-- 📋 HASIL BERITA -->
+<div class="mt-5 space-y-4">
+  @forelse ($berita as $item)
+    @php
+      $title = $item->title ?? $item->judul ?? 'Tanpa Judul';
+      $content = $item->content ?? $item->isi ?? '';
+      $kategoriNama = $item->kategori->nama ?? 'Umum';
+      $gambar = $item->thumbnail ?? $item->gambar ?? $item->foto ?? null;
+
+      $gambarPath = $gambar && file_exists(public_path('storage/images/berita/' . $gambar))
+          ? asset('storage/images/berita/' . $gambar)
+          : asset('assets/img/noimage.jpg');
+    @endphp
+
+    <div class="bg-white p-4 rounded-xl shadow flex gap-4 items-start">
+      <img src="{{ $gambarPath }}"
+           alt="{{ $title }}"
+           class="w-36 h-24 object-cover rounded-lg border border-gray-200">
+
+      <div class="flex-1">
+        <h4 class="font-bold text-blue-600">{{ $title }}</h4>
+        <p class="text-sm text-gray-600">
+          {{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d M Y') }}
+        </p>
+        <p class="text-gray-700 mb-2">
+          {{ \Illuminate\Support\Str::limit(strip_tags($content), 150) }}
+        </p>
+        <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">
+          {{ $kategoriNama }}
+        </span>
+      </div>
+    </div>
+  @empty
+    {{-- ⚙️ Tampilkan pesan hanya kalau user melakukan filter --}}
+    @if ($adaFilter)
+      <p class="text-center text-gray-500">Tidak ada berita ditemukan.</p>
+    @endif
+  @endforelse
 </div>
+
+
+
+
+
+
 
 <!-- SEMUA BERITA -->
 <div id="semuaBerita" class="mt-10 space-y-5">

@@ -5,8 +5,8 @@
             <!-- Kontak -->
             <div>
                 <h3 class="font-semibold mb-3">Kontak Kami</h3>
-                <p class="flex items-center space-x-2"><i class="fas fa-phone mr-2"></i>(021) </p>
-                <p class="flex items-center space-x-2 mt-2"><i class="fas fa-envelope mr-2"></i>info@.sch.id
+                <p class="flex items-center space-x-2"><i class="fas fa-phone mr-2"></i>(021) 1234–5678</p>
+                <p class="flex items-center space-x-2 mt-2"><i class="fas fa-envelope mr-2"></i>info@smaalur.sch.id
                 </p>
             </div>
             <!-- Alamat -->
@@ -21,7 +21,9 @@
                     tinggi.</p>
             </div>
         </div>
-        <div class="border-t border-gray-700 py-4 text-center text-sm text-gray-400">
-            © 2025 SMA Alur. All rights reserved.
-        </div>
-    </footer>
+    </div>
+
+    <div class="border-t border-gray-700 py-4 text-center text-sm text-gray-400">
+        © {{ date('Y') }} SMP Negeri 20 Kendari. All rights reserved.
+    </div>
+</footer>

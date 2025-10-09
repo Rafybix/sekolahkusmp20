@@ -108,4 +108,16 @@ class KategoriBeritaController extends Controller
     {
         //
     }
+   public function hapus($id)
+{
+    $kategori = KategoriBerita::find($id);
+
+    if ($kategori) {
+        $kategori->delete();
+        return redirect()->back()->with('success', 'Kategori berhasil dihapus.');
+    }
+
+    return redirect()->back()->with('error', 'Kategori tidak ditemukan.');
+}
+    
 }

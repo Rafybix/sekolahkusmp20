@@ -190,6 +190,38 @@ class IndexController extends Controller
         return view('frontend.index', compact('kepala'));
     }
 
+public function filterBerita(Request $request)
+{
+    $tanggal = $request->input('tanggal');
+    $bulan = $request->input('bulan');
+    $tahun = $request->input('tahun');
+
+    $query = \App\Models\Berita::where('is_active', '0');
+
+    if ($tanggal) {
+        $query->whereDay('created_at', $tanggal);
+    }
+
+    if ($bulan) {
+        $query->whereMonth('created_at', $bulan);
+    }
+
+    if ($tahun) {
+        $query->whereYear('created_at', $tahun);
+    }
+
+    $berita = $query->orderBy('created_at', 'desc')->paginate(10);
+
+    // Data tambahan biar sidebar gak error
+    $kategori = \App\Models\KategoriBerita::where('is_active','0')->get();
+    $jurusanM = \App\Models\Jurusan::where('is_active','0')->get();
+    $kegiatanM = \App\Models\Kegiatan::where('is_active','0')->get();
+    $footer = \App\Models\Footer::first();
+
+    return view('frontend.content.beritaAll', compact('berita','kategori','jurusanM','kegiatanM','footer'));
+}
+
+
 
 
 }
