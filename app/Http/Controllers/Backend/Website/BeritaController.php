@@ -108,6 +108,25 @@ class BeritaController extends Controller
         return view('frontend.welcome', compact('beritaTerbaru', 'beritaLama'));
     }
 
+    public function destroy($id)
+{
+    // cari berita berdasarkan id
+    $berita = \App\Models\Berita::findOrFail($id);
+
+    // hapus file thumbnail kalau ada
+    if ($berita->thumbnail && file_exists(storage_path('app/public/images/berita/' . $berita->thumbnail))) {
+        unlink(storage_path('app/public/images/berita/' . $berita->thumbnail));
+    }
+
+    // hapus data dari database
+    $berita->delete();
+
+    // redirect kembali ke index dengan pesan sukses
+    return redirect()->route('backend-berita.index')->with('success', 'Berita berhasil dihapus.');
+}
+
+
+
    
 
 

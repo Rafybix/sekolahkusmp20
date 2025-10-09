@@ -1,32 +1,38 @@
 @extends('frontend.template.app')
 @section('content')
-<!-- KONTEN TENGAH -->
-<section class="col-span-6 space-y-6">
-    <!-- Berita Utama -->
-    <div>
-        <div class="relative bg-white shadow rounded-xl overflow-hidden h-[450px]">
-            <img id="heroImage" 
-                src="{{ asset('Assets/Frontend/img/smp20.jpg') }}" 
-                class="w-full h-full object-cover transition-opacity duration-700 ease-in-out">
-
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-            <div class="absolute bottom-5 left-5 right-5 text-white">
-                <h2 class="text-2xl font-bold">SMP Negeri 20 Kendari</h2>
-                <p class="text-sm mt-1">
-                    Tempat menimba ilmu, tempat tercipta kenangan. SMPN 20 Kendari, rumah kedua penuh cerita.
-                </p>
+ <!-- KONTEN TENGAH -->
+        <section class="col-span-6 space-y-6">
+            <!-- Berita Utama -->
+            <div>
+                <div class="relative bg-white shadow rounded-xl overflow-hidden h-[450px]">
+                    <img src="{{ asset('assets/img/smp20.jpg') }}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                    <div class="absolute bottom-5 left-5 right-5 text-white">
+                        <h2 class="text-2xl font-bold">SMP Negeri 20 Kendari</h2>
+                        <p class="text-sm mt-1">Tempat menimba ilmu, tempat tercipta kenangan. SMPN 20 Kendari, rumah
+                            kedua penuh cerita.</p>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
-    {{-- Artikel Berita Lama --}}
-    @php
-        $currentPage = request()->get('page', 1);
-        $perPage = 6;
-        $offset = ($currentPage - 1) * $perPage;
-        $beritaPage = $berita->slice($offset, $perPage);
-        $totalPages = ceil($berita->count() / $perPage);
-    @endphp
+         <!-- Artikel: Berita Lama -->
+
+@php
+    // Ambil parameter halaman dari URL (default 1)
+    $currentPage = request()->get('page', 1);
+
+    // Tentukan berapa berita per halaman
+    $perPage = 6;
+
+    // Hitung offset (mulai dari berita ke berapa)
+    $offset = ($currentPage - 1) * $perPage;
+
+    // Potong data berita sesuai halaman
+    $beritaPage = $berita->slice($offset, $perPage);
+
+    // Hitung total halaman
+    $totalPages = ceil($berita->count() / $perPage);
+@endphp
 
     <div class="grid grid-cols-2 gap-6">
         @foreach ($beritaPage as $item)

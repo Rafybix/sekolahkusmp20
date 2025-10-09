@@ -5,8 +5,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Berita;
-
-
+use App\Http\Controllers\Frontend\BeritaController;
+use App\Http\Controllers\Backend\Website\KategoriBeritaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +21,7 @@ use App\Models\Berita;
 
 
 // ======= FRONTEND ======= \\
+
 
 
 
@@ -50,6 +51,26 @@ Route::get('/berita/search', [App\Http\Controllers\Frontend\IndexController::cla
     }
 
     return response()->json($data);
+})->name('berita.search');
+
+Route::get('/berita/filter', [App\Http\Controllers\Frontend\IndexController::class, 'filterBerita'])->name('berita.filter');
+
+Route::get('/berita/page', [BeritaController::class, 'beritaPage'])->name('berita.page');
+
+// === ROUTE SEARCH BERITA ===
+Route::get('/berita/search', function (Request $request) {
+    $keyword = $request->input('q'); // ambil keyword dari parameter ?q=
+
+    $berita = Berita::with('kategori')
+        ->where('is_active', '0')
+        ->where(function ($query) use ($keyword) {
+            $query->where('title', 'like', "%{$keyword}%")
+                  ->orWhere('content', 'like', "%{$keyword}%");
+        })
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return view('frontend.berita.search', compact('berita', 'keyword'));
 })->name('berita.search');
 
 
@@ -92,6 +113,13 @@ Route::get('/index', fn() => view('frontend.index'))->name('index');
 Auth::routes(['register' => false]);
 
 // ======= BACKEND ======= \\
+Route::delete('/backend/berita/{id}', [App\Http\Controllers\Backend\Website\BeritaController::class, 'destroy'])
+    ->name('backend-berita.destroy');
+
+Route::post('/backend/kategori-berita/hapus/{id}', [KategoriBeritaController::class, 'hapus'])
+    ->name('backend-kategori-berita.hapus');
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -107,6 +135,8 @@ Route::middleware('auth')->group(function () {
 
     // CHANGE PASSWORD
     Route::put('profile-settings/change-password/{id}', [App\Http\Controllers\Backend\ProfileController::class, 'changePassword'])->name('profile.change-password');
+
+    Route::resource('backend-footer', Backend\Website\FooterController::class);
 
     // ===== ADMIN =====
     Route::prefix('/')->middleware('role:Admin')->group(function () {

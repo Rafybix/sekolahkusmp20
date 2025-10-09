@@ -15,15 +15,9 @@ class CreateFootersTable extends Migration
     {
         Schema::create('footers', function (Blueprint $table) {
             $table->id();
-            $table->string('facebook');
-            $table->string('instagram');
-            $table->string('twitter');
-            $table->string('youtube');
-            $table->string('logo');
-            $table->string('telp');
-            $table->string('whatsapp');
-            $table->string('email');
-            $table->string('desc');
+            $table->string('email')->nullable();
+            $table->string('telp')->nullable();
+            $table->string('alamat')->nullable();
             $table->timestamps();
         });
     }
