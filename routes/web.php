@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\Backend\AlbumKegiatanController;
+use App\Http\Controllers\Backend\FrontendController;
 use App\Http\Controllers\Backend\SettingController;
+use App\Http\Controllers\Backend\PhotoController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Berita;
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -14,22 +15,16 @@ use App\Models\Berita;
 |--------------------------------------------------------------------------
 |
 | Semua route di sini udah diperbaiki tanpa ngubah struktur aslinya.
-| Gua cuma benerin view path, penamaan, dan syntax.
+| Fokus utama: perbaikan route albumkegiatan + upload foto.
 |
 */
 
-
-
 // ======= FRONTEND ======= \\
 
-
-
 Route::get('/', [App\Http\Controllers\Frontend\IndexController::class, 'index'])->name('home');
-Route::get('/berita/search', [App\Http\Controllers\Frontend\IndexController::class, 'search'])
-    ->name('berita.search');
+Route::get('/berita/search', [App\Http\Controllers\Frontend\IndexController::class, 'search'])->name('berita.search');
 
-
-    Route::get('/ajax/search', function (Request $request) {
+Route::get('/ajax/search', function (Request $request) {
     $query = $request->q;
     $data = [];
 
@@ -52,8 +47,6 @@ Route::get('/berita/search', [App\Http\Controllers\Frontend\IndexController::cla
     return response()->json($data);
 })->name('berita.search');
 
-
-
 // ===== MENU PROFIL SEKOLAH =====
 Route::get('profile-sekolah', [App\Http\Controllers\Frontend\IndexController::class, 'profileSekolah'])->name('profile.sekolah');
 
@@ -73,25 +66,23 @@ Route::get('event', [App\Http\Controllers\Frontend\IndexController::class, 'even
 Route::get('event/{slug}', [App\Http\Controllers\Frontend\IndexController::class, 'detailEvent'])->name('detail.event');
 
 // ===== HALAMAN TAMBAHAN (STATIC PAGE) =====
-Route::get('/artikel', fn() => view('frontend.artikel'))->name('artikel');
-Route::get('/akademik', fn() => view('frontend.akademik'))->name('akademik');
-Route::get('/ekstrakulikuler', fn() => view('frontend.ekstrakulikuler'))->name('ekstrakulikuler');
-Route::get('/moto', fn() => view('frontend.moto'))->name('moto');
-Route::get('/penilaian', fn() => view('frontend.penilaian'))->name('penilaian');
-Route::get('/saran_mutu', fn() => view('frontend.saran_mutu'))->name('saran_mutu');
-Route::get('/struktur_kurikulum', fn() => view('frontend.struktur_kurikulum'))->name('struktur_kurikulum');
-Route::get('/tujuan', fn() => view('frontend.tujuan'))->name('tujuan');
-Route::get('/visi_misi', fn() => view('frontend.visi_misi'))->name('visi_misi');
-Route::get('/sambutan', function () {
-    return view('frontend.sambutan'); // tampilkan file artikel.blade.php
-})->name('sambutan');
+Route::view('/artikel', 'frontend.artikel')->name('artikel');
+Route::view('/akademik', 'frontend.akademik')->name('akademik');
+Route::view('/ekstrakulikuler', 'frontend.ekstrakulikuler')->name('ekstrakulikuler');
+Route::view('/moto', 'frontend.moto')->name('moto');
+Route::view('/penilaian', 'frontend.penilaian')->name('penilaian');
+Route::view('/saran_mutu', 'frontend.saran_mutu')->name('saran_mutu');
+Route::view('/struktur_kurikulum', 'frontend.struktur_kurikulum')->name('struktur_kurikulum');
+Route::view('/tujuan', 'frontend.tujuan')->name('tujuan');
+Route::view('/visi_misi', 'frontend.visi_misi')->name('visi_misi');
+Route::view('/sambutan', 'frontend.sambutan')->name('sambutan');
 
 // INDEX BERITA
 Route::get('/index', fn() => view('frontend.index'))->name('index');
 
+// ======= BACKEND (ADMIN) ======= \\
 Auth::routes(['register' => false]);
 
-// ======= BACKEND ======= \\
 Route::middleware('auth')->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -100,8 +91,8 @@ Route::middleware('auth')->group(function () {
 
     // SETTINGS
     Route::prefix('settings')->group(function () {
-        Route::get('/', [App\Http\Controllers\Backend\SettingController::class, 'index'])->name('settings');
-        Route::post('add-bank', [App\Http\Controllers\Backend\SettingController::class, 'addBank'])->name('settings.add.bank');
+        Route::get('/', [SettingController::class, 'index'])->name('settings');
+        Route::post('add-bank', [SettingController::class, 'addBank'])->name('settings.add.bank');
         Route::put('notifications/{id}', [SettingController::class, 'notifications']);
     });
 
@@ -117,7 +108,7 @@ Route::middleware('auth')->group(function () {
             'program-studi'           => Backend\Website\ProgramController::class,
             'backend-kegiatan'        => Backend\Website\KegiatanController::class,
             'backend-imageslider'     => Backend\Website\ImageSliderController::class,
-            'backend-kepalasekolah'     => Backend\Website\KepalaSekolahController::class,
+            'backend-kepalasekolah'   => Backend\Website\KepalaSekolahController::class,
             'backend-about'           => Backend\Website\AboutController::class,
             'backend-video'           => Backend\Website\VideoController::class,
             'backend-kategori-berita' => Backend\Website\KategoriBeritaController::class,
@@ -136,4 +127,26 @@ Route::middleware('auth')->group(function () {
             'backend-pengguna-bendahara' => Backend\Pengguna\BendaharaController::class,
         ]);
     });
+
+    // ===== GALERI KEGIATAN =====
 });
+Route::prefix('admin')->group(function () {
+    Route::get('albumkegiatan', [AlbumKegiatanController::class, 'index'])->name('backend-albumkegiatan.index');
+    Route::post('albumkegiatan', [AlbumKegiatanController::class, 'store'])->name('backend-albumkegiatan.store');
+    Route::get('albumkegiatan/{album}/edit', [AlbumKegiatanController::class, 'edit'])->name('backend-albumkegiatan.edit');
+    Route::put('albumkegiatan/{album}', [AlbumKegiatanController::class, 'update'])->name('backend-albumkegiatan.update');
+    Route::delete('albumkegiatan/{album}', [AlbumKegiatanController::class, 'destroy'])->name('backend-albumkegiatan.destroy');
+
+        // ✅ Upload & Hapus Foto
+    Route::post('albumkegiatan/{albumkegiatan}/upload', [AlbumKegiatanController::class, 'uploadPhoto'])->name('backend-albumkegiatan.upload');
+    Route::delete('albumkegiatan/foto/{photo}', [AlbumKegiatanController::class, 'deletePhoto'])->name('backend-albumkegiatan.deletephoto');
+
+    
+Route::get('albumkegiatan/{album}/photos', [PhotoController::class, 'show'])->name('backend-photos.show');
+Route::post('albumkegiatan/{album}/photos', [PhotoController::class, 'store'])->name('backend-photos.store');
+Route::delete('albumkegiatan/{album}/photos/{photo}', [PhotoController::class, 'destroy'])->name('backend-photos.destroy');
+});
+
+Route::get('/artikel', [FrontendController::class, 'artikel'])->name('frontend.artikel');
+
+Route::get('/artikel', [FrontendController::class, 'artikel'])->name('artikel');

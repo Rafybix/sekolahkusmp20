@@ -2,43 +2,28 @@
 @section('content')
 
 <section class="col-span-6 space-y-6">
-    <div class="bg-white p-8 rounded-xl shadow">
-        <div class="flex items-center mb-6">
-            <i class="fa-solid fa-graduation-cap text-blue-600 text-3xl mr-3"></i>
-            <h2 class="text-3xl font-bold text-gray-800 border-l-4 border-blue-500 pl-3">
-                Artikel Pendidikan SMP Negeri 20 Kendari
-            </h2>
-        </div>
+      <div class="container mx-auto px-4">
+        <h2 class="text-2xl font-bold mb-6 text-center">Album Kegiatan</h2>
 
-        <div class="text-gray-700 leading-relaxed space-y-4 text-justify">
-            <p>
-                <span class="font-semibold text-blue-600">SMP Negeri 20 Kendari</span> terus berkomitmen menjadi salah satu sekolah unggulan di Kota Kendari yang tidak hanya berfokus pada prestasi akademik, tetapi juga pada pembentukan karakter dan kepribadian peserta didik. 
-                Dengan mengusung visi <em>“Terwujudnya peserta didik SMP Negeri 20 Kendari yang bertaqwa, unggul dalam prestasi, berwawasan lingkungan dan berkarakter Pancasila.”</em>, sekolah ini berupaya menciptakan lingkungan belajar yang nyaman, disiplin, dan penuh semangat.
-            </p>
-
-            <img src="https://source.unsplash.com/1000x400/?school,classroom" alt="Kegiatan belajar di SMP Negeri 20 Kendari" class="rounded-xl shadow-md w-full my-4">
-
-            <p>
-                Di SMP Negeri 20 Kendari, proses pembelajaran tidak hanya dilakukan di dalam kelas. Guru-guru senantiasa mendorong siswa untuk aktif berpartisipasi dalam kegiatan ekstrakurikuler seperti 
-                <span class="font-medium">Pramuka, PMR, Pencak Silat, Basket, English Club, Teater, dan Pencinta Alam</span>. 
-                Melalui kegiatan tersebut, siswa dapat mengembangkan potensi diri, belajar bekerja sama, serta menumbuhkan rasa tanggung jawab terhadap lingkungan sekitar.
-            </p>
-
-            <img src="https://source.unsplash.com/1000x400/?extracurricular,students" alt="Kegiatan ekstrakurikuler siswa" class="rounded-xl shadow-md w-full my-4">
-
-            <p>
-                Selain itu, sekolah juga berinovasi dalam penerapan <span class="font-semibold text-blue-600">pembelajaran berbasis teknologi</span>. 
-                Guru dan siswa memanfaatkan media digital untuk mendukung kegiatan belajar, seperti penggunaan presentasi interaktif, penugasan online, dan pembelajaran berbasis proyek. 
-                Hal ini sejalan dengan semangat sekolah dalam menyiapkan siswa menghadapi tantangan era digital yang terus berkembang.
-            </p>
-
-            <img src="https://source.unsplash.com/1000x400/?education,technology" alt="Pembelajaran berbasis teknologi" class="rounded-xl shadow-md w-full my-4">
-
-            <p>
-                Kepala sekolah bersama seluruh tenaga pendidik berperan aktif menciptakan suasana belajar yang positif dan inspiratif. 
-                Dengan dukungan dari orang tua dan masyarakat sekitar, SMP Negeri 20 Kendari yakin dapat melahirkan generasi yang 
-                <span class="font-semibold text-blue-600">cerdas, berkarakter, dan siap bersaing di masa depan</span>.
-            </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            @forelse ($albums as $album)
+                <div class="bg-white shadow rounded-lg overflow-hidden hover:shadow-lg transition">
+                    @if($album->gambar && file_exists(public_path('uploads/albumkegiatan/' . $album->gambar)))
+                        <img src="{{ asset('uploads/albumkegiatan/' . $album->gambar) }}" 
+                             alt="{{ $album->nama }}" class="w-full h-48 object-cover">
+                    @else
+                        <div class="bg-gray-200 h-48 flex items-center justify-center text-gray-500">
+                            Tidak ada gambar
+                        </div>
+                    @endif
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold">{{ $album->nama }}</h3>
+                        <p class="text-gray-600 text-sm mt-1">{{ $album->deskripsi }}</p>
+                    </div>
+                </div>
+            @empty
+                <p class="text-center col-span-full text-gray-500">Belum ada album kegiatan.</p>
+            @endforelse
         </div>
     </div>
 </section>
