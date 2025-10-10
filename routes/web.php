@@ -159,3 +159,9 @@ Route::delete('albumkegiatan/{album}/photos/{photo}', [PhotoController::class, '
 Route::get('/artikel', [FrontendController::class, 'artikel'])->name('frontend.artikel');
 
 Route::get('/artikel', [FrontendController::class, 'artikel'])->name('artikel');
+
+Route::get('admin/albumkegiatan/{id}/detail', [App\Http\Controllers\Backend\AlbumKegiatanController::class, 'showAlbum'])
+    ->name('backend-albumkegiatan.detail');
+
+    Route::get('/album/{album}', [AlbumKegiatanController::class, 'show'])->name('album.show');
+    Route::resource('albumkegiatan', App\Http\Controllers\Backend\AlbumKegiatanController::class);

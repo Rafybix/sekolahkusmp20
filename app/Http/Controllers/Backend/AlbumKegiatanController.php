@@ -72,4 +72,9 @@ class AlbumKegiatanController extends Controller
         $album->delete();
         return back()->with('success', 'Album berhasil dihapus!');
     }
+     public function show($id)
+    {
+        $album = Album::with('photos')->findOrFail($id);
+        return view('backend.website.content.albumkegiatan.detail', compact('album'));
+    }
 }
