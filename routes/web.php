@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Berita;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Backend\Website\KategoriBeritaController;
 
 
 
@@ -90,6 +92,9 @@ Route::get('/index', fn() => view('frontend.index'))->name('index');
 Auth::routes(['register' => false]);
 
 // ======= BACKEND ======= \\
+// baru
+Route::get('/admin/home', [HomeController::class, 'home'])->name('admin.home');
+
 Route::middleware('auth')->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -125,6 +130,12 @@ Route::middleware('auth')->group(function () {
             'backend-event'           => Backend\Website\EventsController::class,
             'backend-footer'          => Backend\Website\FooterController::class,
         ]);
+
+        // ✅ Route hapus kategori berita
+Route::delete('backend-kategori-berita/hapus/{id}', [KategoriBeritaController::class, 'hapus'])
+    ->name('backend-kategori-berita.hapus');
+
+
 
         // PENGGUNA
         Route::resources([

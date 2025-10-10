@@ -39,7 +39,8 @@
             <div class="col-12">
                 <section>
                     <div class="row">
-                        @if ($kategori->count() > 0)
+                        {{-- ✅ Cek dulu apakah variabel kategori dikirim --}}
+                        @if (isset($kategori) && $kategori->count() > 0)
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-header border-bottom d-flex justify-content-between align-items-center">
@@ -77,7 +78,10 @@
                                                                 <span class="text-muted">Tidak ada</span>
                                                             @endif
                                                         </td>
-                                                        <td>{{ $beritas->kategori->nama }}</td>
+
+                                                        {{-- ✅ Aman dari error null --}}
+                                                        <td>{{ $beritas->kategori?->nama ?? '-' }}</td>
+
                                                         <td>
                                                             @if ($beritas->is_active == '0')
                                                                 <span class="badge badge-success">Publish</span>
@@ -85,6 +89,7 @@
                                                                 <span class="badge badge-secondary">Draft</span>
                                                             @endif
                                                         </td>
+
                                                         <td class="text-center">
                                                             <a href="{{ route('backend-berita.edit', $beritas->id) }}" 
                                                                class="btn btn-success btn-sm">
