@@ -4,15 +4,19 @@
         <section class="col-span-6 space-y-6">
             <!-- Berita Utama -->
             <div>
-                <div class="relative bg-white shadow rounded-xl overflow-hidden h-[450px]">
-                    <img src="{{ asset('assets/img/smp20.jpg') }}" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                    <div class="absolute bottom-5 left-5 right-5 text-white">
-                        <h2 class="text-2xl font-bold">SMP Negeri 20 Kendari</h2>
-                        <p class="text-sm mt-1">Tempat menimba ilmu, tempat tercipta kenangan. SMPN 20 Kendari, rumah
-                            kedua penuh cerita.</p>
-                    </div>
-                </div>
+               <div class="relative bg-white shadow rounded-xl overflow-hidden h-[450px]">
+  <img id="heroImage" 
+       src="{{ asset('Assets/Frontend/img/smp20.jpg') }}" 
+       class="w-full h-full object-cover transition-opacity duration-500">
+  <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+  <div class="absolute bottom-5 left-5 right-5 text-white">
+    <h2 class="text-2xl font-bold">SMP Negeri 20 Kendari</h2>
+    <p class="text-sm mt-1">
+      Tempat menimba ilmu, tempat tercipta kenangan. SMPN 20 Kendari, rumah kedua penuh cerita.
+    </p>
+  </div>
+</div>
+
             </div>
 
 
@@ -88,7 +92,7 @@
 <script>
     const images = [
         "{{ asset('Assets/Frontend/img/smp20.jpg') }}",
-        "{{ asset('Assets/Frontend/img/gambar1.jpg') }}",
+        "{{ asset('Assets/Frontend/img/3.jpg') }}",
         "{{ asset('Assets/Frontend/img/gambar2.jpg') }}",
     ];
 
