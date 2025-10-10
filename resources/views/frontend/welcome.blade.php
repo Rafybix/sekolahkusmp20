@@ -5,7 +5,7 @@
             <!-- Berita Utama -->
             <div>
                 <div class="relative bg-white shadow rounded-xl overflow-hidden h-[450px]">
-                    <img src="{{ asset('assets/frontend/img/smp20.jpg') }}" class="w-full h-full object-cover">
+                    <img src="{{ asset('assets/img/smp20.jpg') }}" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                     <div class="absolute bottom-5 left-5 right-5 text-white">
                         <h2 class="text-2xl font-bold">SMP Negeri 20 Kendari</h2>
@@ -88,8 +88,8 @@
 <script>
     const images = [
         "{{ asset('Assets/Frontend/img/smp20.jpg') }}",
-        "{{ asset('Assets/Frontend/img/foto2.jpg') }}",
-        "{{ asset('Assets/Frontend/img/foto3.jpg') }}",
+        "{{ asset('Assets/Frontend/img/gambar1.jpg') }}",
+        "{{ asset('Assets/Frontend/img/gambar2.jpg') }}",
     ];
 
     let currentIndex = 0;
