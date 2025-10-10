@@ -2,7 +2,9 @@
     <div class="navbar-header">
         <ul class="nav navbar-nav flex-row">
             <li class="nav-item mr-auto"><a class="navbar-brand" href="/home"><span class="brand-logo">
-                        <svg viewbox="0 0 139 95" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="24">
+                        <!-- <svg viewbox="0 0 139 95" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="24"> -->
+                            <img src="{{ asset('Assets/Frontend/img/logosmp20.jpeg') }}"
+        alt="Logo SMP Negeri 20 Kendari" class="w-12 h-12 rounded-full object-cover">
                             <defs>
                                 <lineargradient id="linearGradient-1" x1="100%" y1="10.5120544%" x2="50%" y2="89.4879456%">
                                     <stop stop-color="#000000" offset="0%"></stop>
@@ -42,33 +44,7 @@
 
             {{-- MENU ADMIN --}}
             @if (Auth::user()->role == 'Admin')
-            <li class=" nav-item">
-                <a class="d-flex align-items-center" href="#"><i data-feather="database"></i>
-                    <span class="menu-title text-truncate" data-i18n="Data Sekolah">Data Sekolah</span>
-                </a>
-                <ul class="menu-content">
-                    <li class="nav-item {{ (request()->is('program-studi')) ? 'active' : '' }}">
-                        <a class="d-flex align-items-center" href=" {{route('program-studi.index')}} "><i data-feather="circle"></i>
-                            <span class="menu-item text-truncate" data-i18n="Basic">Program Studi</span>
-                        </a>
-                    </li>
-                    <li class="nav-item {{ (request()->is('backend-kegiatan')) ? 'active' : '' }}">
-                        <a class="d-flex align-items-center" href=" {{route('backend-kegiatan.index')}} "><i data-feather="circle"></i>
-                            <span class="menu-item text-truncate" data-i18n="Basic">Kegiatan</span>
-                        </a>
-                    </li>
-                    <li><a class="d-flex align-items-center" href="#"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Second Level">Tentang</span></a>
-                        <ul class="menu-content">
-                            <li class="nav-item {{ (request()->is('backend-profile-sekolah')) ? 'active' : '' }}">
-                                <a class="d-flex align-items-center" href="{{route('backend-profile-sekolah.index')}}"><span class="menu-item text-truncate" data-i18n="Third Level">Profile Sekolah</span></a>
-                            </li>
-                            <li class="nav-item {{ (request()->is('backend-visimisi')) ? 'active' : '' }}">
-                                <a class="d-flex align-items-center" href="{{route('backend-visimisi.index')}}"><span class="menu-item text-truncate" data-i18n="Third Level">Visi dan Misi</span></a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
+            
             <li class=" nav-item">
                 <a class="d-flex align-items-center" href="#"><i data-feather="file-text"></i>
                     <span class="menu-title text-truncate" data-i18n="Card">Berita</span>
@@ -101,11 +77,6 @@
                             <span class="menu-item text-truncate" data-i18n="Basic">About</span>
                         </a>
                     </li>
-                    <li class="nav-item {{ (request()->is('backend-imageslider')) ? 'active' : '' }}">
-                        <a class="d-flex align-items-center" href=" {{route('backend-imageslider.index')}} "><i data-feather="circle"></i>
-                            <span class="menu-item text-truncate" data-i18n="Basic">Gambar Slider</span>
-                        </a>
-                    </li>
                      <li class="nav-item {{ (request()->is('backend-kepalasekolah')) ? 'active' : '' }}">
                         <a class="d-flex align-items-center" href=" {{route('backend-kepalasekolah.index')}} "><i data-feather="circle"></i>
                             <span class="menu-item text-truncate" data-i18n="Basic">Kepala Sekolah</span>
@@ -131,43 +102,7 @@
                 </ul>
             </li>
 
-            <li class=" nav-item">
-                <a class="d-flex align-items-center" href="#"><i data-feather="users"></i>
-                    <span class="menu-title text-truncate" data-i18n="Card">Pengguna</span>
-                </a>
-                <ul class="menu-content">
-                    <li class="nav-item {{ (request()->is('backend-pengguna-pengajar')) ? 'active' : '' }}">
-                        <a class="d-flex align-items-center" href=" {{route('backend-pengguna-pengajar.index')}} "><i data-feather="circle"></i>
-                            <span class="menu-item text-truncate" data-i18n="Basic">Pengajar</span>
-                        </a>
-                    </li>
-                    <li class="nav-item {{ (request()->is('backend-pengguna-staf')) ? 'active' : '' }}">
-                        <a class="d-flex align-items-center" href=" {{route('backend-pengguna-staf.index')}} "><i data-feather="circle"></i>
-                            <span class="menu-item text-truncate" data-i18n="Basic">Staf</span>
-                        </a>
-                    </li>
-                    <li class="nav-item {{ (request()->is('backend-pengguna-murid')) ? 'active' : '' }}">
-                        <a class="d-flex align-items-center" href=" {{route('backend-pengguna-murid.index')}} "><i data-feather="circle"></i>
-                            <span class="menu-item text-truncate" data-i18n="Basic">Murid</span>
-                        </a>
-                    </li>
-                    <li class="nav-item {{ (request()->is('backend-pengguna-ppdb')) ? 'active' : '' }}">
-                        <a class="d-flex align-items-center" href=" {{route('backend-pengguna-ppdb.index')}} "><i data-feather="circle"></i>
-                            <span class="menu-item text-truncate" data-i18n="Basic">PPDB</span>
-                        </a>
-                    </li>
-                    <li class="nav-item {{ (request()->is('backend-pengguna-perpus')) ? 'active' : '' }}">
-                        <a class="d-flex align-items-center" href=" {{route('backend-pengguna-perpus.index')}} "><i data-feather="circle"></i>
-                            <span class="menu-item text-truncate" data-i18n="Basic">Perpustakaan</span>
-                        </a>
-                    </li>
-                    <li class="nav-item {{ (request()->is('backend-pengguna-bendahara')) ? 'active' : '' }}">
-                        <a class="d-flex align-items-center" href=" {{route('backend-pengguna-bendahara.index')}} "><i data-feather="circle"></i>
-                            <span class="menu-item text-truncate" data-i18n="Basic">Bendahara</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
+            
 
              <li class=" nav-item {{ (request()->is('backup')) ? 'active' : '' }}">
                 <a class="d-flex align-items-center" href="{{ route('backup.index') }}"><i data-feather="database"></i>
