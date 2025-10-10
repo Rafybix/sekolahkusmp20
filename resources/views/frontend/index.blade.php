@@ -87,7 +87,7 @@
 </form>
 
 <!-- 📋 HASIL BERITA -->
-<div class="mt-5 space-y-4">
+<div class="mt-5 grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(280px,1fr))] max-w-7xl mx-auto">
   @forelse ($berita as $item)
     @php
       $title = $item->title ?? $item->judul ?? 'Tanpa Judul';
@@ -100,26 +100,31 @@
           : asset('assets/img/noimage.jpg');
     @endphp
 
-    <div class="bg-white p-4 rounded-xl shadow flex gap-4 items-start">
+    <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition flex flex-col overflow-hidden h-full">
       <img src="{{ $gambarPath }}"
            alt="{{ $title }}"
-           class="w-36 h-24 object-cover rounded-lg border border-gray-200">
+           class="w-full h-48 object-cover">
 
-      <div class="flex-1">
-        <h4 class="font-bold text-blue-600">{{ $title }}</h4>
-        <p class="text-sm text-gray-600">
-          {{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d M Y') }}
-        </p>
-        <p class="text-gray-700 mb-2">
-          {{ \Illuminate\Support\Str::limit(strip_tags($content), 150) }}
-        </p>
-        <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">
-          {{ $kategoriNama }}
-        </span>
+      <div class="p-4 flex flex-col justify-between flex-1">
+        <div>
+          <h4 class="font-semibold text-blue-600 text-base leading-tight hover:underline mb-1">
+            {{ $title }}
+          </h4>
+          <p class="text-xs text-gray-500 mb-1">
+            {{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d M Y') }}
+          </p>
+          <p class="text-gray-700 text-sm leading-snug line-clamp-4">
+            {{ \Illuminate\Support\Str::limit(strip_tags($content), 130) }}
+          </p>
+        </div>
+        <div class="mt-3">
+          <span class="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded">
+            {{ $kategoriNama }}
+          </span>
+        </div>
       </div>
     </div>
   @empty
-    {{-- ⚙️ Tampilkan pesan hanya kalau user melakukan filter --}}
     @if ($adaFilter)
       <p class="text-center text-gray-500">Tidak ada berita ditemukan.</p>
     @endif
@@ -132,6 +137,11 @@
 
 
 
+
+
+
+
+<!-- SEMUA BERITA -->
 <!-- SEMUA BERITA -->
 <div id="semuaBerita" class="mt-10 space-y-5">
     <h2 class="text-xl font-bold text-gray-800 border-l-4 border-blue-600 pl-3 mb-4">
@@ -168,127 +178,110 @@
     @endif
 
     @php
-use App\Models\Berita;
-use Illuminate\Support\Str;
+        use App\Models\Berita;
+        use Illuminate\Support\Str;
 
-// Ambil semua berita aktif dengan paginasi 7 per halaman
-$semuaBerita = Berita::where('is_active', '0')
-    ->orderBy('created_at', 'desc')
-    ->paginate(7);
-@endphp
+        // Ambil semua berita aktif dengan paginasi 7 per halaman
+        $semuaBerita = Berita::where('is_active', '0')
+            ->orderBy('created_at', 'desc')
+            ->paginate(7);
+    @endphp
 
-<div class="news-event-area mt-10">
-    <div class="container">
-        <div class="row">
-            <!-- SEMUA BERITA -->
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 news-inner-area">
-              
+    <div class="news-event-area mt-10">
+        <div class="container">
+            <div class="row">
+                <!-- SEMUA BERITA -->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 news-inner-area">
+                  
+ <!-- GRID 2 KOLOM COMPACT -->
+<ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    @forelse ($semuaBerita as $item)
+        <li class="bg-white rounded-lg shadow transition hover:-translate-y-1 hover:shadow-lg overflow-hidden">
+            <!-- Gambar (diperkecil tinggi) -->
+            <div class="h-20 w-full overflow-hidden">
+                <a href="{{ route('detail.berita', $item->slug) }}">
+                    <img 
+                        src="{{ asset('storage/images/berita/' . ($item->thumbnail ?? 'default.jpg')) }}" 
+                        alt="{{ $item->title ?? 'Berita' }}" 
+                        class="w-full h-full object-cover"
+                    >
+                </a>
+            </div>
 
-                <ul class="news-wrapper list-unstyled" style="display: flex; flex-direction: column; gap: 20px;">
-                    @forelse ($semuaBerita as $item)
-                        <li 
-                            style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 20px; padding: 18px; background: #fff; border-radius: 10px; box-shadow: 0 3px 8px rgba(0,0,0,0.08); transition: all 0.3s ease-in-out;"
-                            onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 6px 14px rgba(0,0,0,0.12)';"
-                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 3px 8px rgba(0,0,0,0.08)';"
-                        >
-                            <!-- Gambar -->
-                            <div style="flex-shrink: 0; width: 180px; height: 120px; overflow: hidden; border-radius: 8px;">
-                                <a href="{{ route('detail.berita', $item->slug) }}">
-                                    <img 
-                                        src="{{ asset('storage/images/berita/' . ($item->thumbnail ?? 'default.jpg')) }}" 
-                                        alt="{{ $item->title ?? 'Berita' }}" 
-                                        style="width: 100%; height: 100%; object-fit: cover;"
-                                    >
-                                </a>
-                            </div>
+            <!-- Konten (diperkecil padding dan font) -->
+            <div class="p-3 space-y-1">
+                <h3 class="text-base font-semibold text-blue-900 hover:text-blue-600 transition leading-tight">
+                    <a href="{{ route('detail.berita', $item->slug) }}">
+                        {{ $item->title ?? 'Judul Tidak Diketahui' }}
+                    </a>
+                </h3>
 
-                            <!-- Konten -->
-                            <div style="flex: 1; min-width: 220px;">
-                                <h3 style="margin: 0; font-size: 1.1rem; font-weight: bold; line-height: 1.4;">
-                                    <a href="{{ route('detail.berita', $item->slug) }}" 
-                                       style="color: #1e3a8a; text-decoration: none;"
-                                       onmouseover="this.style.color='#2563eb';"
-                                       onmouseout="this.style.color='#1e3a8a';">
-                                        {{ $item->title ?? 'Judul Tidak Diketahui' }}
-                                    </a>
-                                </h3>
+                <div class="text-xs text-gray-500 flex items-center gap-1">
+                    <i class="fa-regular fa-calendar text-blue-500 text-xs"></i>
+                    {{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}
+                </div>
 
-                                <div style="color: #6b7280; font-size: 0.85rem; margin-top: 5px; display: flex; align-items: center; gap: 6px;">
-                                    <i class="fa-regular fa-calendar text-blue-500"></i>
-                                    {{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}
-                                </div>
+                <p class="text-gray-700 text-xs line-clamp-2">
+                    {{ strip_tags($item->isi ?? $item->content ?? 'Tidak ada isi berita') }}
+                </p>
 
-                                <!-- Isi berita singkat -->
-                                <p style="
-                                    margin-top: 10px; 
-                                    color: #374151; 
-                                    font-size: 0.9rem; 
-                                    line-height: 1.6;
-                                    display: -webkit-box;
-                                    -webkit-line-clamp: 3; /* Batas 3 baris */
-                                    -webkit-box-orient: vertical;
-                                    overflow: hidden;
-                                    text-overflow: ellipsis;
-                                ">
-                                    {{ strip_tags($item->isi ?? $item->content ?? 'Tidak ada isi berita') }}
-                                </p>
+                <a href="{{ route('detail.berita', $item->slug) }}" 
+                   class="text-xs text-blue-600 font-medium hover:underline">
+                    Baca Selengkapnya →
+                </a>
+            </div>
+        </li>
+    @empty
+        <li>
+            <div class="bg-gray-50 p-4 rounded-lg text-center text-gray-500 text-sm">
+                Tidak ada berita untuk ditampilkan.
+            </div>
+        </li>
+    @endforelse
+</ul>
 
-                                <a href="{{ route('detail.berita', $item->slug) }}" 
-                                   style="font-size: 0.85rem; color: #2563eb; text-decoration: none; font-weight: 500;"
-                                   onmouseover="this.style.textDecoration='underline';"
-                                   onmouseout="this.style.textDecoration='none';">
-                                    Baca Selengkapnya →
-                                </a>
-                            </div>
-                        </li>
-                    @empty
-                        <li>
-                            <div style="background: #f9fafb; padding: 20px; border-radius: 8px; text-align: center; color: #6b7280;">
-                                Tidak ada berita untuk ditampilkan.
-                            </div>
-                        </li>
-                    @endforelse
-                </ul>
 
-                <!-- PAGINATION KUSTOM -->
-                @if ($semuaBerita->hasPages())
-                    <div class="mt-6 flex justify-center items-center gap-2 flex-wrap">
-                        {{-- Tombol Sebelumnya --}}
-                        @if ($semuaBerita->onFirstPage())
-                            <span style="padding: 8px 14px; border-radius: 6px; background: #e5e7eb; color: #9ca3af; font-size: 0.9rem;">← Sebelumnya</span>
-                        @else
-                            <a href="{{ $semuaBerita->previousPageUrl() }}" 
-                               style="padding: 8px 14px; border-radius: 6px; background: #2563eb; color: #fff; font-size: 0.9rem; text-decoration: none;">
-                                ← Sebelumnya
-                            </a>
-                        @endif
 
-                        {{-- Nomor Halaman --}}
-                        @foreach ($semuaBerita->links()->elements[0] ?? range(1, $semuaBerita->lastPage()) as $page => $url)
-                            @if ($page == $semuaBerita->currentPage())
-                                <span style="padding: 8px 14px; border-radius: 6px; background: #2563eb; color: #fff; font-weight: bold;">{{ $page }}</span>
+                    <!-- PAGINATION KUSTOM -->
+                    @if ($semuaBerita->hasPages())
+                        <div class="mt-6 flex justify-center items-center gap-2 flex-wrap">
+                            {{-- Tombol Sebelumnya --}}
+                            @if ($semuaBerita->onFirstPage())
+                                <span style="padding: 8px 14px; border-radius: 6px; background: #e5e7eb; color: #9ca3af; font-size: 0.9rem;">← Sebelumnya</span>
                             @else
-                                <a href="{{ $semuaBerita->url($page) }}" 
-                                   style="padding: 8px 14px; border-radius: 6px; background: #f3f4f6; color: #374151; text-decoration: none;"
-                                   onmouseover="this.style.background='#e5e7eb';"
-                                   onmouseout="this.style.background='#f3f4f6';">
-                                   {{ $page }}
+                                <a href="{{ $semuaBerita->previousPageUrl() }}" 
+                                   style="padding: 8px 14px; border-radius: 6px; background: #2563eb; color: #fff; font-size: 0.9rem; text-decoration: none;">
+                                    ← Sebelumnya
                                 </a>
                             @endif
-                        @endforeach
 
-                        {{-- Tombol Berikutnya --}}
-                        @if ($semuaBerita->hasMorePages())
-                            <a href="{{ $semuaBerita->nextPageUrl() }}" 
-                               style="padding: 8px 14px; border-radius: 6px; background: #2563eb; color: #fff; font-size: 0.9rem; text-decoration: none;">
-                                Berikutnya →
-                            </a>
-                        @else
-                            <span style="padding: 8px 14px; border-radius: 6px; background: #e5e7eb; color: #9ca3af; font-size: 0.9rem;">Berikutnya →</span>
-                        @endif
-                    </div>
-                @endif
+                            {{-- Nomor Halaman --}}
+                            @foreach ($semuaBerita->links()->elements[0] ?? range(1, $semuaBerita->lastPage()) as $page => $url)
+                                @if ($page == $semuaBerita->currentPage())
+                                    <span style="padding: 8px 14px; border-radius: 6px; background: #2563eb; color: #fff; font-weight: bold;">{{ $page }}</span>
+                                @else
+                                    <a href="{{ $semuaBerita->url($page) }}" 
+                                       style="padding: 8px 14px; border-radius: 6px; background: #f3f4f6; color: #374151; text-decoration: none;"
+                                       onmouseover="this.style.background='#e5e7eb';"
+                                       onmouseout="this.style.background='#f3f4f6';">
+                                       {{ $page }}
+                                    </a>
+                                @endif
+                            @endforeach
 
+                            {{-- Tombol Berikutnya --}}
+                            @if ($semuaBerita->hasMorePages())
+                                <a href="{{ $semuaBerita->nextPageUrl() }}" 
+                                   style="padding: 8px 14px; border-radius: 6px; background: #2563eb; color: #fff; font-size: 0.9rem; text-decoration: none;">
+                                    Berikutnya →
+                                </a>
+                            @else
+                                <span style="padding: 8px 14px; border-radius: 6px; background: #e5e7eb; color: #9ca3af; font-size: 0.9rem;">Berikutnya →</span>
+                            @endif
+                        </div>
+                    @endif
+
+                </div>
             </div>
         </div>
     </div>
