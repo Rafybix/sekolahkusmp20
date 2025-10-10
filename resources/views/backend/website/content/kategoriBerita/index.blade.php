@@ -67,15 +67,18 @@
                               <i class="fa fa-edit"></i> Edit
                             </a>
 
+                            {{-- ✅ Perbaikan di sini --}}
                             <form action="{{ route('backend-kategori-berita.hapus', $kategoris->id) }}" 
                                   method="POST" 
                                   class="d-inline"
                                   onsubmit="return confirm('Yakin ingin menghapus kategori ini?')">
                               @csrf
+                              @method('DELETE')
                               <button type="submit" class="btn btn-danger btn-sm">
                                 <i class="fa fa-trash"></i> Hapus
                               </button>
                             </form>
+                            {{-- ✅ Akhir perbaikan --}}
                           </td>
                         </tr>
                       @empty

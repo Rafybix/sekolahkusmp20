@@ -22,8 +22,10 @@
                 <i class="fa fa-user mr-1"></i> {{ $berita->user->name }}
                 <span class="ml-4"><i class="fa fa-tags mr-1"></i> {{ $berita->kategori->nama }}</span>
             </div>
-            <div class="prose max-w-none">
-                {!! $berita->content !!}
+
+            <!-- Perbaikan konten biar baris kosong ikut tampil -->
+            <div class="prose max-w-none leading-relaxed text-gray-800">
+                {!! nl2br(e($berita->content)) !!}
             </div>
         </div>
     </div>
