@@ -50,7 +50,7 @@ class AlbumKegiatanController extends Controller
         $data = $request->only('nama', 'deskripsi');
 
         if ($request->hasFile('gambar')) {
-            // hapus gambar lama
+            // Hapus gambar lama jika ada
             if ($album->gambar && Storage::disk('public')->exists($album->gambar)) {
                 Storage::disk('public')->delete($album->gambar);
             }
@@ -72,9 +72,17 @@ class AlbumKegiatanController extends Controller
         $album->delete();
         return back()->with('success', 'Album berhasil dihapus!');
     }
-     public function show($id)
+
+    public function show($id)
     {
         $album = Album::with('photos')->findOrFail($id);
         return view('backend.website.content.albumkegiatan.detail', compact('album'));
+    }
+
+    // ✅ Tambahkan ini untuk tampilan frontend
+    public function frontendIndex()
+    {
+        $albums = \App\Models\Album::latest()->get();
+        return view('frontend.artikel', compact('albums'));
     }
 }

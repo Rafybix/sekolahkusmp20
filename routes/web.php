@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\Website\KategoriBeritaController;
 
 use App\Http\Controllers\Backend\ProfileController;
+
 use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\Frontend\MenuController;
 use App\Http\Controllers\KontakController;
@@ -139,3 +140,16 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/penilaian', [PenilaianController::class, 'publicIndex'])->name('penilaian.front');
 
+
+
+Route::get('/artikel', [AlbumKegiatanController::class, 'frontendIndex'])->name('artikel');
+
+// Halaman daftar album
+Route::get('/artikel', [AlbumKegiatanController::class, 'frontendIndex'])->name('artikel');
+
+// Halaman detail album
+Route::get('/album/{id}', [AlbumKegiatanController::class, 'showAlbum'])->name('album.show');
+
+Route::get('albumkegiatan/{id}/detail', [AlbumKegiatanController::class, 'show'])->name('backend-albumkegiatan.detail');
+
+Route::get('/album/{id}', [AlbumKegiatanController::class, 'show'])->name('album.show');

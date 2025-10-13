@@ -2,11 +2,11 @@
 @section('content')
 <section class="col-span-6 space-y-6">
   <div class="container">
-    <h2 class="mb-4">{{ $album->nama_album }}</h2>
-    <p>{{ $album->deskripsi }}</p>
+    <h2 class="mb-4 text-2xl font-bold text-center">{{ $album->nama }}</h2>
+    <p class="text-gray-600 text-center">{{ $album->deskripsi }}</p>
 
     <!-- Grid Foto -->
-    <div class="photo-grid mt-3">
+    <div class="photo-grid mt-6">
       @forelse($album->photos as $photo)
         <div class="photo-item">
           <a href="{{ asset('storage/' . $photo->file_path) }}"
@@ -18,7 +18,7 @@
           </a>
         </div>
       @empty
-        <p class="text-center">Tidak ada foto di album ini.</p>
+        <p class="text-center text-gray-500 col-span-full">Tidak ada foto di album ini.</p>
       @endforelse
     </div>
   </div>
@@ -48,14 +48,11 @@
 </script>
 
 <style>
-/* Grid 5 kolom rapi */
 .photo-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 6px;
 }
-
-/* Bikin foto kecil, kotak, rapet */
 .photo-item {
   aspect-ratio: 1 / 1;
   overflow: hidden;
@@ -63,18 +60,14 @@
   border: 1px solid #ddd;
   transition: transform 0.2s ease-in-out;
 }
-
 .photo-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-
 .photo-item:hover {
   transform: scale(1.03);
 }
-
-/* Responsif biar di HP keliatan cakep */
 @media (max-width: 992px) {
   .photo-grid {
     grid-template-columns: repeat(3, 1fr);
