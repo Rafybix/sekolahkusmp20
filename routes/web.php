@@ -179,4 +179,4 @@ Route::get('admin/albumkegiatan/{id}/detail', [App\Http\Controllers\Backend\Albu
     Route::resource('albumkegiatan', App\Http\Controllers\Backend\AlbumKegiatanController::class);
 
 
-    Route::post('/kirim-pesan', [KontakController::class, 'kirim']);
+Route::post('/kirim-pesan', [KontakController::class, 'kirimPesan'])->name('kirim.pesan');

@@ -15,15 +15,10 @@ class KontakController extends Controller
             'pesan' => 'required',
         ]);
 
-        $data = [
-            'nama' => $request->nama,
-            'email' => $request->email,
-            'pesan' => $request->pesan,
-        ];
+        $data = $request->only(['nama', 'email', 'pesan']);
 
-        // Kirim email
-        Mail::send('emails.kontak', $data, function ($message) use ($data) {
-            $message->to('wulanpermatasari0209@gmail.com') // GANTI ke email tujuan kamu
+        Mail::send('frontend.emails.kontak', $data, function ($message) use ($data) {
+            $message->to('wulanpermatasari0209@gmail.com')
                     ->subject('Pesan Baru dari ' . $data['nama'])
                     ->replyTo($data['email']);
         });

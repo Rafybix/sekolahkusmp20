@@ -67,10 +67,13 @@ document.getElementById('hubungiForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const form = this;
     fetch(form.action, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
-    })
+    method: 'POST',
+    body: new FormData(form),
+    headers: { 
+        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        'Accept': 'application/json'
+    }
+})
     .then(res => res.json())
     .then(data => {
         if (data.success) {
