@@ -102,7 +102,7 @@ document.getElementById('hubungiForm').addEventListener('submit', function(e) {
 </section>
 
 <!-- Script Popup Sukses -->
-<script>
+<!-- <script>
     const form = document.getElementById('hubungiForm');
     const successMessage = document.getElementById('successMessage');
 
@@ -114,6 +114,6 @@ document.getElementById('hubungiForm').addEventListener('submit', function(e) {
             successMessage.classList.add('hidden'); // sembunyikan lagi setelah 3 detik
         }, 3000);
     });
-</script>
+</script> -->
 
 @endsection

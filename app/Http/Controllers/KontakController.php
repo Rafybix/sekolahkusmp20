@@ -17,12 +17,20 @@ class KontakController extends Controller
 
         $data = $request->only(['nama', 'email', 'pesan']);
 
-        Mail::send('frontend.emails.kontak', $data, function ($message) use ($data) {
-            $message->to('wulanpermatasari0209@gmail.com')
-                    ->subject('Pesan Baru dari ' . $data['nama'])
-                    ->replyTo($data['email']);
-        });
+        try {
+            Mail::send('frontend.emails.kontak', $data, function ($message) use ($data) {
+                $message->to('wulanpermatasari0209@gmail.com') // ganti sesuai email penerima
+                        ->subject('Pesan Baru dari ' . $data['nama'])
+                        ->replyTo($data['email']);
+            });
 
-        return response()->json(['success' => true]);
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            // biar kelihatan di popup apa error-nya
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ]);
+        }
     }
-}
+} 
