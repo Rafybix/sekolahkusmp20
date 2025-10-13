@@ -3,6 +3,7 @@
 use App\Http\Controllers\Backend\AlbumKegiatanController;
 use App\Http\Controllers\Backend\FrontendController;
 use App\Http\Controllers\Backend\SettingController;
+use App\Http\Controllers\KontakController;
 use App\Http\Controllers\Backend\PhotoController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -176,3 +177,6 @@ Route::get('admin/albumkegiatan/{id}/detail', [App\Http\Controllers\Backend\Albu
 
     Route::get('/album/{album}', [AlbumKegiatanController::class, 'show'])->name('album.show');
     Route::resource('albumkegiatan', App\Http\Controllers\Backend\AlbumKegiatanController::class);
+
+
+    Route::post('/kirim-pesan', [KontakController::class, 'kirim']);

@@ -48,14 +48,43 @@
     <!-- Form Kontak (Statis + Popup sukses) -->
     <div class="bg-white p-6 rounded-xl shadow mt-6">
         <h2 class="text-2xl font-semibold text-green-700 mb-4">Kirim Pesan</h2>
-        <form id="hubungiForm" class="space-y-4">
-            <input type="text" name="nama" placeholder="Nama Anda" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
-            <input type="email" name="email" placeholder="Email Anda" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
-            <textarea name="pesan" placeholder="Pesan Anda" rows="5" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required></textarea>
-            <button type="submit" class="bg-green-700 text-white px-6 py-3 rounded-lg hover:bg-green-800 transition">
-                Kirim Pesan
-            </button>
-        </form>
+        <form id="hubungiForm" action="/kirim-pesan" method="POST" class="space-y-4">
+    @csrf
+    <input type="text" name="nama" placeholder="Nama Anda" class="w-full p-3 border border-gray-300 rounded-lg" required>
+    <input type="email" name="email" placeholder="Email Anda" class="w-full p-3 border border-gray-300 rounded-lg" required>
+    <textarea name="pesan" placeholder="Pesan Anda" rows="5" class="w-full p-3 border border-gray-300 rounded-lg" required></textarea>
+    <button type="submit" class="bg-green-700 text-white px-6 py-3 rounded-lg hover:bg-green-800 transition">
+        Kirim Pesan
+    </button>
+</form>
+
+<div id="successMessage" class="hidden mt-4 bg-green-100 text-green-800 p-3 rounded">
+    Pesan berhasil dikirim!
+</div>
+
+<script>
+document.getElementById('hubungiForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = this;
+    fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('successMessage').classList.remove('hidden');
+            form.reset();
+            setTimeout(() => document.getElementById('successMessage').classList.add('hidden'), 3000);
+        } else {
+            alert('Gagal kirim');
+        }
+    })
+    .catch(() => alert('Error server'));
+});
+</script>
+
         <!-- Notifikasi Sukses -->
         <div id="successMessage" class="hidden mt-4 bg-green-100 text-green-800 p-3 rounded">
             Pesan berhasil dikirim!

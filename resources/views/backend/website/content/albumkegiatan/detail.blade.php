@@ -9,7 +9,7 @@
     @forelse($album->photos as $photo)
       <div class="col-md-3 mb-3">
         <div class="card shadow-sm">
-<img src="{{ asset('storage/images/uploads/album_photos/' . basename($photo->path)) }}" 
+        <img src="{{ asset('storage/' . $photo->file_path) }}" 
      class="card-img-top" 
      alt="Foto Kegiatan">
         </div>

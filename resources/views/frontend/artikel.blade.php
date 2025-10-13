@@ -8,8 +8,8 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @forelse ($albums as $album)
     <a href="{{ route('album.show', $album->id) }}" class="block bg-white shadow rounded-lg overflow-hidden hover:shadow-lg transition">
-        @if($album->gambar && file_exists(public_path('uploads/albumkegiatan/' . $album->gambar)))
-            <img src="{{ asset('storage/images/uploads/albumkegiatan/' . $album->gambar) }}" 
+        @if($album->gambar && file_exists(public_path('uploads/album_photos/' . $album->gambar)))
+            <img src="{{ asset('storage/' . $photo->file_path) }}" 
                  alt="{{ $album->nama }}" class="w-full h-48 object-cover">
         @else
             <div class="bg-gray-200 h-48 flex items-center justify-center text-gray-500">
