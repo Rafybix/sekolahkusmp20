@@ -1,103 +1,97 @@
 @extends('frontend.template.app')
+
 @section('content')
-<!-- PENILAIAN DAN EVALUASI SEKOLAH -->
+@php
+    // Tentukan jumlah item per halaman
+    $perPage = 6;
+
+    // Ambil halaman dari query string, default 1
+    $currentPage = request()->get('page', 1);
+
+    // Hitung total item
+    $total = $penilaians->count();
+
+    // Slice collection sesuai halaman
+    $paginated = $penilaians->forPage($currentPage, $perPage);
+
+    // Hitung total halaman
+    $lastPage = ceil($total / $perPage);
+@endphp
+
 <section class="col-span-6 space-y-6">
-    <div class="bg-white rounded-3xl shadow-xl p-10 border border-gray-100">
-        <!-- Judul -->
-        <div class="text-center mb-10">
-            <h2 class="text-4xl font-extrabold text-gray-800 tracking-wide mb-2">
-                Penilaian dan Evaluasi Sekolah
-            </h2>
-            <p class="text-gray-500 text-lg">
-                Evaluasi berkelanjutan untuk meningkatkan mutu pendidikan di lingkungan sekolah.
-            </p>
-            <div class="mt-4 w-32 mx-auto h-1 bg-gradient-to-r from-blue-600 to-blue-400 rounded-full"></div>
-        </div>
+    <h2 class="text-3xl font-bold mb-10 text-center text-gray-900">Daftar Penilaian</h2>
 
-        <!-- Konten Utama -->
-        <div class="grid md:grid-cols-2 gap-10 text-gray-700 leading-relaxed">
-            <!-- Kolom 1 -->
-            <div class="space-y-5">
-                <h3 class="text-2xl font-semibold text-blue-700 border-l-4 border-blue-500 pl-3">
-                    Tujuan Penilaian
-                </h3>
-                <p>
-                    Penilaian dilakukan sebagai sarana untuk mengukur sejauh mana proses pembelajaran dan
-                    pengelolaan sekolah berjalan efektif. Melalui evaluasi yang terarah, sekolah mampu menilai
-                    tingkat keberhasilan siswa, kinerja guru, serta efektivitas program pendidikan.
+    <div class="flex flex-col gap-6">
+        @forelse($paginated as $p)
+        <div class="bg-white rounded-2xl shadow-lg flex hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
+            
+            <!-- Bagian kiri: informasi teks -->
+            <div class="flex-1 p-6 flex flex-col justify-between">
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ $p->judul }}</h3>
+
+                @if($p->tanggal)
+                <p class="text-gray-500 text-sm mb-3 flex items-center gap-1">
+                    <span>📅</span> {{ \Carbon\Carbon::parse($p->tanggal)->translatedFormat('j F Y') }}
                 </p>
-                <p>
-                    Hasil penilaian menjadi dasar pengambilan keputusan dalam meningkatkan mutu pembelajaran,
-                    memperkuat manajemen sekolah, serta menumbuhkan budaya akademik yang berorientasi pada kualitas.
-                </p>
+                @endif
+
+                @if($p->deskripsi)
+                <p class="text-gray-700 mb-4">{{ $p->deskripsi }}</p>
+                @endif
             </div>
 
-            <!-- Kolom 2 -->
-            <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl shadow-inner border border-blue-200">
-                <h3 class="text-2xl font-semibold text-blue-800 mb-3">Aspek Penilaian</h3>
-                <ul class="list-disc ml-6 space-y-2">
-                    <li>Kedisiplinan dan kehadiran peserta didik dan tenaga pendidik.</li>
-                    <li>Prestasi akademik serta non-akademik siswa.</li>
-                    <li>Kinerja dan profesionalisme tenaga pendidik.</li>
-                    <li>Manajemen sekolah dan pelayanan administrasi.</li>
-                    <li>Partisipasi orang tua dan masyarakat.</li>
-                    <li>Kebersihan, keamanan, dan kenyamanan lingkungan belajar.</li>
-                </ul>
+            <!-- Bagian kanan: File / Link -->
+            <div class="flex flex-col justify-center p-6 space-y-3 border-l border-gray-200">
+                @if($p->file_upload)
+                <a href="{{ asset('storage/' . $p->file_upload) }}" target="_blank"
+                   class="flex items-center gap-2 text-white bg-blue-600 hover:bg-blue-700 font-medium px-4 py-2 rounded-xl transition text-sm">
+                    📄 Lihat File
+                </a>
+                @endif
+
+                @if($p->link)
+                <a href="{{ $p->link }}" target="_blank"
+                   class="flex items-center gap-2 text-white bg-green-600 hover:bg-green-700 font-medium px-4 py-2 rounded-xl transition text-sm">
+                    🔗 Buka Link
+                </a>
+                @endif
+
+                @if(!$p->file_upload && !$p->link)
+                <span class="text-gray-400 text-sm italic">Tidak ada file atau link</span>
+                @endif
             </div>
         </div>
-
-        <!-- Tabel Skala -->
-        <div class="mt-14">
-            <h3 class="text-2xl font-semibold text-blue-700 border-l-4 border-blue-500 pl-3 mb-6">
-                Skala Penilaian Mutu Sekolah
-            </h3>
-
-            <div class="overflow-x-auto rounded-2xl border border-gray-200 shadow-sm">
-                <table class="min-w-full text-left text-gray-700">
-                    <thead class="bg-gradient-to-r from-blue-600 to-blue-500 text-white">
-                        <tr>
-                            <th class="py-4 px-6 font-semibold text-sm uppercase">Kategori</th>
-                            <th class="py-4 px-6 font-semibold text-sm uppercase">Deskripsi</th>
-                            <th class="py-4 px-6 font-semibold text-sm uppercase text-center">Nilai</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100">
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="py-4 px-6 font-semibold">Sangat Baik</td>
-                            <td class="py-4 px-6">Mutu sekolah sangat tinggi dan menjadi contoh bagi sekolah lain.</td>
-                            <td class="py-4 px-6 text-center text-green-600 font-bold">91–100</td>
-                        </tr>
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="py-4 px-6 font-semibold">Baik</td>
-                            <td class="py-4 px-6">Sebagian besar indikator mutu tercapai dengan hasil memuaskan.</td>
-                            <td class="py-4 px-6 text-center text-blue-600 font-bold">76–90</td>
-                        </tr>
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="py-4 px-6 font-semibold">Cukup</td>
-                            <td class="py-4 px-6">Beberapa indikator perlu peningkatan agar hasil lebih optimal.</td>
-                            <td class="py-4 px-6 text-center text-yellow-600 font-bold">61–75</td>
-                        </tr>
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="py-4 px-6 font-semibold">Perlu Perbaikan</td>
-                            <td class="py-4 px-6">Sebagian besar indikator belum tercapai secara konsisten.</td>
-                            <td class="py-4 px-6 text-center text-red-600 font-bold">≤ 60</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Kesimpulan -->
-        <div class="mt-12 text-center text-gray-600">
-            <p class="text-lg italic">
-                “Penilaian bukan sekadar angka, melainkan cerminan dari proses dan dedikasi seluruh warga sekolah
-                dalam menciptakan pendidikan yang bermutu dan berkarakter.”
-            </p>
-        </div>
+        @empty
+        <p class="text-gray-600 text-center">Belum ada penilaian yang diunggah.</p>
+        @endforelse
     </div>
+
+    <!-- Pagination Manual -->
+    @if($lastPage > 1)
+    <div class="mt-6 flex justify-center space-x-2">
+        {{-- Previous --}}
+        @if($currentPage > 1)
+        <a href="?page={{ $currentPage - 1 }}" class="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition">&laquo;</a>
+        @else
+        <span class="px-4 py-2 bg-gray-200 text-gray-500 rounded-full cursor-not-allowed">&laquo;</span>
+        @endif
+
+        {{-- Page Numbers --}}
+        @for($i = 1; $i <= $lastPage; $i++)
+            @if($i == $currentPage)
+            <span class="px-4 py-2 bg-blue-600 text-white rounded-full">{{ $i }}</span>
+            @else
+            <a href="?page={{ $i }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition">{{ $i }}</a>
+            @endif
+        @endfor
+
+        {{-- Next --}}
+        @if($currentPage < $lastPage)
+        <a href="?page={{ $currentPage + 1 }}" class="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition">&raquo;</a>
+        @else
+        <span class="px-4 py-2 bg-gray-200 text-gray-500 rounded-full cursor-not-allowed">&raquo;</span>
+        @endif
+    </div>
+    @endif
 </section>
 @endsection
-
-
-
-

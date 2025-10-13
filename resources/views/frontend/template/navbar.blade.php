@@ -77,7 +77,7 @@
       </li>
 
       <li><a href="{{ route('index') }}" class="block px-4 py-2 hover:bg-gray-800 md:hover:bg-transparent md:hover:text-amber-400">Index Berita</a></li>
-      <li><a href="{{ route('penilaian') }}" class="block px-4 py-2 hover:bg-gray-800 md:hover:bg-transparent md:hover:text-amber-400">Penilaian</a></li>
+      <li><a href="{{ route('penilaian.front') }}" class="block px-4 py-2 hover:bg-gray-800 md:hover:bg-transparent md:hover:text-amber-400">Penilaian</a></li>
       <li><a href="{{ route('hubungi') }}" class="block px-4 py-2 hover:bg-gray-800 md:hover:bg-transparent md:hover:text-amber-400">Hubungi Kami</a></li>
 
       <!-- Tombol Login untuk Mobile -->

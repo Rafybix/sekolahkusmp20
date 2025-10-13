@@ -72,11 +72,12 @@
                     <span class="menu-title text-truncate" data-i18n="Card">Website</span>
                 </a>
                 <ul class="menu-content">
-                    <li class="nav-item {{ (request()->is('backend-about')) ? 'active' : '' }}">
-                        <a class="d-flex align-items-center" href=" {{route('backend-about.index')}} "><i data-feather="circle"></i>
-                            <span class="menu-item text-truncate" data-i18n="Basic">About</span>
-                        </a>
-                    </li>
+                    <li class="nav-item {{ request()->is('admin/penilaian*') ? 'active' : '' }}">
+    <a class="d-flex align-items-center" href="{{ route('penilaian.index') }}">
+        <i data-feather="circle"></i>
+        <span class="menu-item text-truncate">Penilaian</span>
+    </a>
+</li>
                      <li class="nav-item {{ (request()->is('backend-kepalasekolah')) ? 'active' : '' }}">
                         <a class="d-flex align-items-center" href=" {{route('backend-kepalasekolah.index')}} "><i data-feather="circle"></i>
                             <span class="menu-item text-truncate" data-i18n="Basic">Kepala Sekolah</span>
