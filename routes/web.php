@@ -5,7 +5,7 @@ use App\Http\Controllers\Backend\PhotoController;
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\Website\KategoriBeritaController;
 
-use App\Http\Controllers\Backend\ProfileController;
+use Backend\ProfileController;
 
 use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\Frontend\MenuController;
