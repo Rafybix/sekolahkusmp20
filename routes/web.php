@@ -140,8 +140,6 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/penilaian', [PenilaianController::class, 'publicIndex'])->name('penilaian.front');
 
-
-
 Route::get('/artikel', [AlbumKegiatanController::class, 'frontendIndex'])->name('artikel');
 
 // Halaman daftar album
@@ -153,3 +151,7 @@ Route::get('/album/{id}', [AlbumKegiatanController::class, 'showAlbum'])->name('
 Route::get('albumkegiatan/{id}/detail', [AlbumKegiatanController::class, 'show'])->name('backend-albumkegiatan.detail');
 
 Route::get('/album/{id}', [AlbumKegiatanController::class, 'show'])->name('album.show');
+
+
+
+

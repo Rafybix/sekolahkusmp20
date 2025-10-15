@@ -94,11 +94,14 @@
                         </a>
                     </li>
 
+
+
                     <li class="nav-item {{ (request()->is('backend-footer')) ? 'active' : '' }}">
                         <a class="d-flex align-items-center" href=" {{route('backend-footer.index')}} "><i data-feather="circle"></i>
                             <span class="menu-item text-truncate" data-i18n="Basic">Footer</span>
                         </a>
                     </li>
+
 
                 </ul>
             </li>
