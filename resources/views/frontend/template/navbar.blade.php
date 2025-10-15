@@ -56,7 +56,7 @@
           </svg>
         </button>
         <ul class="hidden group-hover:block md:absolute bg-gray-800 md:rounded-md md:shadow-lg md:w-48 md:mt-1">
-          <li><a href="{{ route('struktur_kurikulum') }}" class="block px-4 py-2 hover:bg-gray-700">Struktur Kurikulum</a></li>
+          <li><a href="{{ route('frontend.struktur-kurikulum') }}" class="block px-4 py-2 hover:bg-gray-700">Struktur Kurikulum</a></li>
           <li><a href="{{ route('akademik') }}" class="block px-4 py-2 hover:bg-gray-700">Program Akademik</a></li>
           <li><a href="{{ route('ekstrakulikuler') }}" class="block px-4 py-2 hover:bg-gray-700">Ekstrakurikuler</a></li>
         </ul>

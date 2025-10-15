@@ -18,6 +18,9 @@ use Illuminate\Http\Request;
 use App\Models\Berita;
 use App\Models\Penilaian;
 use App\Http\Controllers\Backend\Website\PenilaianController;
+
+use App\Http\Controllers\Backend\Website\KurikulumController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -67,7 +70,7 @@ Route::view('/ekstrakulikuler', 'frontend.ekstrakulikuler')->name('ekstrakulikul
 Route::view('/moto', 'frontend.moto')->name('moto');
 Route::view('/penilaian', 'frontend.penilaian')->name('penilaian.front');
 Route::view('/saran_mutu', 'frontend.saran_mutu')->name('saran_mutu');
-Route::view('/struktur_kurikulum', 'frontend.struktur_kurikulum')->name('struktur_kurikulum');
+
 Route::view('/tujuan', 'frontend.tujuan')->name('tujuan');
 Route::view('/visi_misi', 'frontend.visi_misi')->name('visi_misi');
 Route::view('/sambutan', 'frontend.sambutan')->name('sambutan');
@@ -113,6 +116,11 @@ Route::middleware('auth')->group(function () {
             'backend-footer'          => Backend\Website\FooterController::class,
         ]);
 
+        // Tambahkan Kurikulum hanya index, create, store, destroy
+Route::resource('backend-kurikulum', Backend\Website\KurikulumController::class)
+    ->only(['index', 'create', 'store', 'destroy']);
+
+
         // Hapus kategori berita
         Route::delete('backend-kategori-berita/hapus/{id}', [KategoriBeritaController::class, 'hapus'])
             ->name('backend-kategori-berita.hapus');
@@ -153,3 +161,6 @@ Route::get('/album/{id}', [AlbumKegiatanController::class, 'showAlbum'])->name('
 Route::get('albumkegiatan/{id}/detail', [AlbumKegiatanController::class, 'show'])->name('backend-albumkegiatan.detail');
 
 Route::get('/album/{id}', [AlbumKegiatanController::class, 'show'])->name('album.show');
+
+Route::get('/struktur-kurikulum', [KurikulumController::class, 'tampilkan'])
+    ->name('frontend.struktur-kurikulum');
