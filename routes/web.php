@@ -4,9 +4,8 @@ use App\Http\Controllers\Backend\AlbumKegiatanController;
 use App\Http\Controllers\Backend\PhotoController;
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\Website\KategoriBeritaController;
-
-use App\Http\Controllers\Backend\ProfileController;
-
+use App\Http\Controllers\Backend\Website\AkademikController;
+use Backend\ProfileController;
 use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\Frontend\MenuController;
 use App\Http\Controllers\KontakController;
@@ -18,6 +17,9 @@ use Illuminate\Http\Request;
 use App\Models\Berita;
 use App\Models\Penilaian;
 use App\Http\Controllers\Backend\Website\PenilaianController;
+
+use App\Http\Controllers\Backend\Website\KurikulumController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -67,7 +69,7 @@ Route::view('/ekstrakulikuler', 'frontend.ekstrakulikuler')->name('ekstrakulikul
 Route::view('/moto', 'frontend.moto')->name('moto');
 Route::view('/penilaian', 'frontend.penilaian')->name('penilaian.front');
 Route::view('/saran_mutu', 'frontend.saran_mutu')->name('saran_mutu');
-Route::view('/struktur_kurikulum', 'frontend.struktur_kurikulum')->name('struktur_kurikulum');
+
 Route::view('/tujuan', 'frontend.tujuan')->name('tujuan');
 Route::view('/visi_misi', 'frontend.visi_misi')->name('visi_misi');
 Route::view('/sambutan', 'frontend.sambutan')->name('sambutan');
@@ -113,6 +115,11 @@ Route::middleware('auth')->group(function () {
             'backend-footer'          => Backend\Website\FooterController::class,
         ]);
 
+        // Tambahkan Kurikulum hanya index, create, store, destroy
+Route::resource('backend-kurikulum', Backend\Website\KurikulumController::class)
+    ->only(['index', 'create', 'store', 'destroy']);
+
+
         // Hapus kategori berita
         Route::delete('backend-kategori-berita/hapus/{id}', [KategoriBeritaController::class, 'hapus'])
             ->name('backend-kategori-berita.hapus');
@@ -152,6 +159,16 @@ Route::get('albumkegiatan/{id}/detail', [AlbumKegiatanController::class, 'show']
 
 Route::get('/album/{id}', [AlbumKegiatanController::class, 'show'])->name('album.show');
 
+Route::get('/struktur-kurikulum', [KurikulumController::class, 'tampilkan'])
+    ->name('frontend.struktur-kurikulum');
 
 
+// program akademik
+Route::resource('backend-akademik', Backend\Website\AkademikController::class)
+    ->only(['index', 'create', 'store', 'destroy']);
 
+Route::get('/akademik', [AkademikController::class, 'frontendIndex'])->name('akademik');
+
+Route::prefix('backend')->name('backend-')->group(function () {
+    Route::resource('penilaian', PenilaianController::class);
+});

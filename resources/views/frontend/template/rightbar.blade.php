@@ -1,7 +1,7 @@
 
 <!-- SIDEBAR KANAN -->
         <aside class="col-span-3 space-y-6">
-           <!-- Search -->
+     <!-- Search -->
 <div class="bg-white shadow rounded-xl p-5">
     <h2 class="text-gray-700 font-semibold mb-3">Cari Artikel</h2>
 
@@ -35,6 +35,7 @@
     const searchItems = document.getElementById('searchItems');
     const form = document.getElementById('searchForm');
 
+    const ajaxUrl = "{{ route('berita.search.ajax') }}"; // route AJAX JSON
     let delayTimer;
 
     // Saat user mengetik (real-time)
@@ -48,19 +49,12 @@
             return;
         }
 
-        // kasih delay 0.4 detik biar gak spam server
+        // delay 0.4 detik biar gak spam server
         delayTimer = setTimeout(() => {
-            fetch(`{{ route('berita.search') }}?q=${encodeURIComponent(query)}`)
-                .then(response => response.text())
-                .then(html => {
-                    // cari data json di dalam respons (kita ambil dari route)
-                    try {
-                        const data = JSON.parse(html);
-                        tampilkanHasil(data);
-                    } catch {
-                        searchItems.innerHTML = '<p class="text-gray-500 text-sm">Tidak ada hasil ditemukan.</p>';
-                        searchResults.classList.remove('hidden');
-                    }
+            fetch(`${ajaxUrl}?q=${encodeURIComponent(query)}`)
+                .then(response => response.json()) // langsung json
+                .then(data => {
+                    tampilkanHasil(data);
                 })
                 .catch(() => {
                     searchItems.innerHTML = '<p class="text-gray-500 text-sm">Terjadi kesalahan.</p>';
@@ -105,6 +99,7 @@
         searchResults.classList.remove('hidden');
     }
 </script>
+
 
 
 
