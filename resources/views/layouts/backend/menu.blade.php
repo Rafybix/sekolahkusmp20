@@ -60,11 +60,7 @@
                             <span class="menu-item text-truncate" data-i18n="Basic">Kategori Berita</span>
                         </a>
                     </li>
-                    <li class="nav-item {{ (request()->is('backend-event')) ? 'active' : '' }}">
-                        <a class="d-flex align-items-center" href=" {{route('backend-event.index')}} "><i data-feather="circle"></i>
-                            <span class="menu-item text-truncate" data-i18n="Basic">Event</span>
-                        </a>
-                    </li>
+ 
                 </ul>
             </li>
             <li class=" nav-item">
@@ -86,11 +82,6 @@
                      <li class="nav-item {{ (request()->is('backend-kepalasekolah')) ? 'active' : '' }}">
                         <a class="d-flex align-items-center" href=" {{route('backend-albumkegiatan.index')}} "><i data-feather="circle"></i>
                             <span class="menu-item text-truncate" data-i18n="Basic">Gambar Kegiatan</span>
-                        </a>
-                    </li>
-                    <li class="nav-item {{ (request()->is('backend-video')) ? 'active' : '' }}">
-                        <a class="d-flex align-items-center" href=" {{route('backend-video.index')}} "><i data-feather="circle"></i>
-                            <span class="menu-item text-truncate" data-i18n="Basic">Video</span>
                         </a>
                     </li>
                     <li class="nav-item {{ (request()->is('admin/backend-kurikulum*')) ? 'active' : '' }}">
