@@ -60,7 +60,6 @@
                             <span class="menu-item text-truncate" data-i18n="Basic">Kategori Berita</span>
                         </a>
                     </li>
- 
                 </ul>
             </li>
             <li class=" nav-item">
@@ -112,11 +111,11 @@
 
             
 
-             <li class=" nav-item {{ (request()->is('backup')) ? 'active' : '' }}">
+             <!-- <li class=" nav-item {{ (request()->is('backup')) ? 'active' : '' }}">
                 <a class="d-flex align-items-center" href="{{ route('backup.index') }}"><i data-feather="database"></i>
                     <span class="menu-title text-truncate" data-i18n="Backup">Backup</span>
                 </a>
-            </li>
+            </li> -->
 
             {{-- MENU GURU --}}
             @elseif(Auth::user()->role == 'Guru')
