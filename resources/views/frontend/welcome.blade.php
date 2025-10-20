@@ -88,7 +88,6 @@
     @endif
 </section>
 
-{{-- SCRIPT SLIDESHOW --}}
 <script>
     const images = [
         "{{ asset('Assets/Frontend/img/smp20.jpg') }}",

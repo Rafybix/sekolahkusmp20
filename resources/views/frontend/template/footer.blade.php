@@ -1,21 +1,24 @@
 <!-- FOOTER -->
 <footer class="bg-black text-white mt-10">
-    <div class="max-w-7xl mx-auto grid grid-cols-3 gap-8 px-6 py-10 border-t border-gray-700">
+    <div class="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 border-t border-gray-700">
         <!-- Kontak -->
         <div>
             <h3 class="font-semibold mb-3">Kontak Kami</h3>
             <p class="flex items-center space-x-2">
-                <i class="fas fa-phone mr-2"></i>{{ $footer->telp ?? '(021) 1234–5678' }}
+                <i class="fas fa-phone"></i>
+                <span>{{ $footer->telp ?? '(021) 1234–5678' }}</span>
             </p>
             <p class="flex items-center space-x-2 mt-2">
-                <i class="fas fa-envelope mr-2"></i>{{ $footer->email ?? 'info@smaalur.sch.id' }}
+                <i class="fas fa-envelope"></i>
+                <span>{{ $footer->email ?? 'info@smaalur.sch.id' }}</span>
             </p>
         </div>
         <!-- Alamat -->
         <div>
             <h3 class="font-semibold mb-3">Alamat</h3>
-            <p class="flex items-center">
-                <i class="fas fa-map-marker-alt mr-2"></i>{{ $footer->alamat ?? 'Jalan Ruruhi Kecamatan Poasia Kelurahan Rahandauna Kota Kendari' }}
+            <p class="flex items-start sm:items-center">
+                <i class="fas fa-map-marker-alt mr-2 mt-1 sm:mt-0"></i>
+                <span>{{ $footer->alamat ?? 'Jalan Ruruhi Kecamatan Poasia Kelurahan Rahandauna Kota Kendari' }}</span>
             </p>
         </div>
         <!-- Tentang -->
