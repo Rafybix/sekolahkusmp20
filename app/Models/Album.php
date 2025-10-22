@@ -17,4 +17,14 @@ class Album extends Model
     {
         return $this->hasMany(Photo::class, 'album_id');
     }
+
+    // Set gambar default otomatis kalau belum ada
+    protected static function booted()
+    {
+        static::creating(function ($album) {
+            if (empty($album->gambar)) {
+                $album->gambar = 'Assets/Frontend/img/album.png';
+            }
+        });
+    }
 }
