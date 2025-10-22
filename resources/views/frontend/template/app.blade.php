@@ -34,27 +34,67 @@
         @include('frontend.template.navbar')
     </header>
 
+    <!-- Tombol Sidebar Kiri (Mobile) -->
+    <button id="toggleLeftbar"
+        class="fixed top-1/2 left-2 z-50 bg-yellow-500 text-white p-3 rounded-r-lg shadow-lg md:hidden transform -translate-y-1/2">
+        <i class="fa-solid fa-angles-right"></i>
+    </button>
+
+    <!-- Tombol Sidebar Kanan (Mobile) -->
+    <button id="toggleRightbar"
+        class="fixed top-1/2 right-2 z-50 bg-yellow-500 text-white p-3 rounded-l-lg shadow-lg md:hidden transform -translate-y-1/2">
+        <i class="fa-solid fa-angles-left"></i>
+    </button>
+
     <!-- Isi halaman -->
-    <main class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 mt-6 px-4">
-    {{-- Sidebar kiri --}}
-    <div class="order-2 md:order-1 md:col-span-3">
-        @includeIf('frontend.template.leftbar')
-    </div>
+    <main class="max-w-7xl mx-auto grid grid-cols-12 gap-6 mt-6 px-4">
 
-    {{-- Konten utama --}}
-    <div class="order-1 md:order-2 md:col-span-6">
+        {{-- Sidebar kiri --}}
+ <aside id="leftbar"
+    class="col-span-3 md:block fixed md:relative top-0 left-0 h-full md:h-auto bg-white shadow-lg md:shadow-none z-40 w-64 md:w-auto transform -translate-x-full md:translate-x-0 transition-transform duration-300">
+    @includeIf('frontend.template.leftbar')
+</aside>
+
+
+        {{-- Konten utama --}}
         @yield('content')
-    </div>
 
-    {{-- Sidebar kanan --}}
-    <div class="order-3 md:order-3 md:col-span-3">
-        @includeIf('frontend.template.rightbar')
-    </div>
-</main>
+        {{-- Sidebar kanan --}}
+<aside id="rightbar"
+    class="col-span-3 md:block fixed md:relative top-0 right-0 h-full md:h-auto bg-white shadow-lg md:shadow-none z-40 w-64 md:w-auto transform translate-x-full md:translate-x-0 transition-transform duration-300">
+    @includeIf('frontend.template.rightbar')
+</aside>
 
+    </main>
 
     <!-- Footer -->
     @includeIf('frontend.template.footer')
+
+    <!-- Script Sidebar Toggle -->
+    <script>
+        const leftbar = document.getElementById('leftbar');
+        const rightbar = document.getElementById('rightbar');
+        const toggleLeftbar = document.getElementById('toggleLeftbar');
+        const toggleRightbar = document.getElementById('toggleRightbar');
+
+        toggleLeftbar.addEventListener('click', () => {
+            leftbar.classList.toggle('-translate-x-full');
+        });
+
+        toggleRightbar.addEventListener('click', () => {
+            rightbar.classList.toggle('translate-x-full');
+        });
+
+        // Klik di luar sidebar -> sidebar nutup
+        document.addEventListener('click', (e) => {
+            if (!leftbar.contains(e.target) && !toggleLeftbar.contains(e.target) && !leftbar.classList.contains('-translate-x-full')) {
+                leftbar.classList.add('-translate-x-full');
+            }
+            if (!rightbar.contains(e.target) && !toggleRightbar.contains(e.target) && !rightbar.classList.contains('translate-x-full')) {
+                rightbar.classList.add('translate-x-full');
+            }
+        });
+    </script>
 
     <!-- Script Dropdown -->
     <script>
