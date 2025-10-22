@@ -139,7 +139,47 @@ $recentPosts = Berita::where('is_active', '0')
     </ul>
 </div>
 
+{{-- visitor pengunjung --}}
+@php
+use App\Models\Visitor;
+use App\Helpers\GlobalHelpers;
 
+$helper = new class { use \App\Helpers\GlobalHelpers; };
+$visitor = $helper->getVisitorData();
+
+// ✅ Cegah pengunjung bertambah tiap refresh (1x per sesi)
+if (!session()->has('visitor_logged')) {
+    \App\Models\Visitor::create($visitor);
+    session(['visitor_logged' => true]);
+}
+
+$total = Visitor::count();
+@endphp
+
+<div class="bg-white text-gray-800 rounded-xl shadow-lg border border-gray-200 p-4 w-full max-w-xs mx-auto">
+    <div class="bg-black text-white text-center font-semibold py-2 rounded-md mb-4 shadow-sm">
+        STATISTIK PENGUNJUNG
+    </div>
+
+    <ul class="space-y-2 text-sm">
+        <li class="flex justify-between border-b border-gray-200 pb-1">
+            <span>⚫ Total Kunjungan:</span>
+            <b>{{ number_format($total) }}</b>
+        </li>
+        <li class="flex justify-between border-b border-gray-200 pb-1">
+            <span>⚫ IP Address:</span>
+            <b>{{ $visitor['ip'] }}</b>
+        </li>
+        <li class="flex justify-between border-b border-gray-200 pb-1">
+            <span>⚫ Sistem Operasi:</span>
+            <b>{{ $visitor['os'] }}</b>
+        </li>
+        <li class="flex justify-between">
+            <span>⚫ Browser:</span>
+            <b>{{ $visitor['browser'] }}</b>
+        </li>
+    </ul>
+</div>
 
 
         </aside>

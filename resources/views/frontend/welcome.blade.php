@@ -6,7 +6,7 @@
             <div>
                <div class="relative bg-white shadow rounded-xl overflow-hidden h-[450px]">
   <img id="heroImage" 
-       src="{{ asset('Assets/Frontend/img/smp20.jpg') }}" 
+       src="{{ asset('Assets/Frontend/img/smp20s.png') }}" 
        class="w-full h-full object-cover transition-opacity duration-500">
   <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
   <div class="absolute bottom-5 left-5 right-5 text-white">
@@ -90,9 +90,11 @@
 
 <script>
     const images = [
+        "{{ asset('Assets/Frontend/img/smp20s.png') }}",
         "{{ asset('Assets/Frontend/img/smp20.jpg') }}",
-        "{{ asset('Assets/Frontend/img/3.jpg') }}",
         "{{ asset('Assets/Frontend/img/gambar2.jpg') }}",
+        
+        
     ];
 
     let currentIndex = 0;
