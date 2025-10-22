@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->string('nama');
             $table->text('deskripsi')->nullable();
+            $table->string('gambar')->nullable(); // ✅ kolom gambar ditambahkan
             $table->timestamps();
         });
     }

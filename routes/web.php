@@ -174,3 +174,5 @@ Route::get('/akademik', [AkademikController::class, 'frontendIndex'])->name('aka
 Route::prefix('backend')->name('backend-')->group(function () {
     Route::resource('penilaian', PenilaianController::class);
 });
+
+Route::get('/visitor-stats', [HomeController::class, 'visitorStats'])->name('visitor.stats');

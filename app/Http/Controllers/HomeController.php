@@ -13,9 +13,14 @@ use Illuminate\Support\Facades\Auth;
 use Modules\Perpustakaan\Entities\Book;
 use Modules\Perpustakaan\Entities\Borrowing;
 use Modules\Perpustakaan\Entities\Member;
+use App\Helpers\GlobalHelpers;
+
 
 class HomeController extends Controller
 {
+
+     use GlobalHelpers;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -120,5 +125,20 @@ class HomeController extends Controller
                 return view('spp::index');
             }
         }
+    }
+
+    public function visitorStats()
+    {
+        // Ambil data visitor
+        $visitor = $this->getVisitorData();
+
+        // Simpan ke database
+        Visitor::create($visitor);
+
+        // Hitung total pengunjung
+        $total = Visitor::count();
+
+        // Kirim ke tampilan
+        return view('frontend.template.rightbar', compact('visitor', 'total'));
     }
 }

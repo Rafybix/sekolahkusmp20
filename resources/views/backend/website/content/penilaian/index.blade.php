@@ -10,14 +10,14 @@
 
     <a href="{{ route('penilaian.create') }}" class="btn btn-primary mb-3">Tambah Penilaian</a>
 
-    <table class="table table-bordered">
+    <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th>Judul</th>
-                <th>Tanggal</th>
-                <th>Deskripsi</th>
-                <th>File/Link</th>
-                <th>Aksi</th>
+                <th style="width: 20%;">Judul</th>
+                <th style="width: 10%;">Tanggal</th>
+                <th style="width: 30%;">Deskripsi</th>
+                <th style="width: 25%;">File</th>
+                <th style="width: 15%;">Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -25,18 +25,28 @@
             <tr>
                 <td>{{ $p->judul }}</td>
                 <td>{{ $p->tanggal ? \Carbon\Carbon::parse($p->tanggal)->translatedFormat('j F Y') : '-' }}</td>
-                <td>{{ $p->deskripsi ?? '-' }}</td>
+                <td style="max-width: 400px;">
+                    <div style="display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden;">
+                        {!! $p->deskripsi ?? '-' !!}
+                    </div>
+                </td>
                 <td>
-                    @if($p->file_pdf)
-                        <a href="{{ asset('storage/' . $p->file_pdf) }}" target="_blank">📄 PDF</a>
-                    @elseif($p->link)
-                        <a href="{{ $p->link }}" target="_blank">🔗 Link</a>
+                    @if($p->file_upload)
+                        <ul class="mb-0">
+                            @foreach($p->file_upload as $file)
+                                <li>
+                                    <a href="{{ asset('storage/' . $file['path']) }}" target="_blank">
+                                        {{ $file['title'] ?? 'Lihat File' }}
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
                     @else
                         -
                     @endif
                 </td>
                 <td>
-                    <a href="{{ route('penilaian.edit', $p->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="{{ route('penilaian.edit', $p->id) }}" class="btn btn-sm btn-warning mb-1">Edit</a>
                     <form action="{{ route('penilaian.destroy', $p->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus?');">
                         @csrf
                         @method('DELETE')

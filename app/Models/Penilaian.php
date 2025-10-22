@@ -13,7 +13,12 @@ class Penilaian extends Model
         'judul',
         'tanggal',
         'deskripsi',
-        'file_upload', // ganti dari file_pdf ke file_upload
-        'link',
+        'file_upload',  // array JSON {path, title}
+    ];
+
+    // otomatis konversi file_upload JSON ke array
+    protected $casts = [
+        'file_upload' => 'array',
+        'tanggal' => 'date',
     ];
 }

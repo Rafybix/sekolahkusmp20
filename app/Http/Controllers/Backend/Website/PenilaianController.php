@@ -26,13 +26,22 @@ class PenilaianController extends Controller
             'judul' => 'required|string|max:255',
             'tanggal' => 'nullable|date',
             'deskripsi' => 'nullable|string',
-            'file_upload' => 'nullable|file|max:10240', // semua tipe file, max 10MB
-            'link' => 'nullable|string|max:255',
+            'file_upload.*' => 'nullable|file|max:10240', // per file
+            'file_title.*' => 'nullable|string|max:255',  // per judul
         ]);
 
-        if ($request->hasFile('file_upload')) {
-            $validated['file_upload'] = $request->file('file_upload')->store('penilaian', 'public');
+        $files = [];
+        if($request->hasFile('file_upload')){
+            foreach($request->file('file_upload') as $index => $file){
+                if($file){
+                    $path = $file->store('penilaian', 'public');
+                    $title = $request->file_title[$index] ?? $file->getClientOriginalName();
+                    $files[] = ['path'=>$path, 'title'=>$title];
+                }
+            }
         }
+
+        $validated['file_upload'] = $files;
 
         Penilaian::create($validated);
 
@@ -51,16 +60,29 @@ class PenilaianController extends Controller
             'judul' => 'required|string|max:255',
             'tanggal' => 'nullable|date',
             'deskripsi' => 'nullable|string',
-            'file_upload' => 'nullable|file|max:10240',
-            'link' => 'nullable|string|max:255',
+            'file_upload.*' => 'nullable|file|max:10240',
+            'file_title.*' => 'nullable|string|max:255',
         ]);
 
-        if ($request->hasFile('file_upload')) {
-            if ($penilaian->file_upload && Storage::disk('public')->exists($penilaian->file_upload)) {
-                Storage::disk('public')->delete($penilaian->file_upload);
+        $files = $penilaian->file_upload ?? []; // ambil file lama
+        if($request->hasFile('file_upload')){
+            foreach($request->file('file_upload') as $index => $file){
+                if($file){
+                    $path = $file->store('penilaian', 'public');
+                    $title = $request->file_title[$index] ?? $file->getClientOriginalName();
+                    $files[] = ['path'=>$path, 'title'=>$title];
+                }
             }
-            $validated['file_upload'] = $request->file('file_upload')->store('penilaian', 'public');
+        } else {
+            // update judul file lama jika diubah
+            if(isset($request->file_title)){
+                foreach($request->file_title as $i => $title){
+                    if(isset($files[$i])) $files[$i]['title'] = $title;
+                }
+            }
         }
+
+        $validated['file_upload'] = $files;
 
         $penilaian->update($validated);
 
@@ -70,8 +92,12 @@ class PenilaianController extends Controller
 
     public function destroy(Penilaian $penilaian)
     {
-        if ($penilaian->file_upload && Storage::disk('public')->exists($penilaian->file_upload)) {
-            Storage::disk('public')->delete($penilaian->file_upload);
+        if($penilaian->file_upload){
+            foreach($penilaian->file_upload as $file){
+                if(Storage::disk('public')->exists($file['path'])){
+                    Storage::disk('public')->delete($file['path']);
+                }
+            }
         }
 
         $penilaian->delete();

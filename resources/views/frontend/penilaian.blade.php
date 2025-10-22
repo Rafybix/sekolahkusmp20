@@ -22,6 +22,34 @@
     $lastPage = ceil($total / $perPage);
 @endphp
 
+<style>
+    /* Link di deskripsi */
+    .ck-content a {
+        color: #1D4ED8;
+        text-decoration: none;
+    }
+    .ck-content a:hover {
+        color: #1E40AF;
+    }
+
+    /* File link style */
+    /* File link style */
+.file-link {
+    color: #000000; /* teks hitam */
+    background-color: #3B82F6; /* tombol biru */
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.file-link:hover {
+    background-color: #2563EB; /* biru lebih gelap saat hover */
+}
+
+</style>
+
 <section class="col-span-6 space-y-6">
     <h2 class="text-3xl font-bold mb-6 text-center text-gray-900">Daftar Penilaian</h2>
 
@@ -67,29 +95,22 @@
 
             <!-- Deskripsi -->
             @if($p->deskripsi)
-            <p class="text-gray-700 mb-4">{{ $p->deskripsi }}</p>
+            <div class="text-gray-700 mb-4 ck-content">
+                {!! $p->deskripsi !!}
+            </div>
             @endif
 
-            <!-- File / Link di bawah -->
+            <!-- File (bisa banyak) -->
+            @if($p->file_upload)
             <div class="flex flex-wrap gap-3 mt-4">
-                @if($p->file_upload)
-                <a href="{{ asset('storage/' . $p->file_upload) }}" target="_blank"
-                   class="flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700 font-medium px-4 py-2 rounded-lg transition text-sm">
-                    Lihat File
-                </a>
-                @endif
-
-                @if($p->link)
-                <a href="{{ $p->link }}" target="_blank"
-                   class="flex items-center justify-center text-white bg-green-600 hover:bg-green-700 font-medium px-4 py-2 rounded-lg transition text-sm">
-                    Buka Link
-                </a>
-                @endif
-
-                @if(!$p->file_upload && !$p->link)
-                <span class="text-gray-400 text-sm italic">Tidak ada file atau link</span>
-                @endif
+                @foreach($p->file_upload as $file)
+                    <a href="{{ asset('storage/' . $file['path']) }}" target="_blank"
+                       class="file-link">
+                        {{ $file['title'] ?? 'Lihat File' }}
+                    </a>
+                @endforeach
             </div>
+            @endif
         </div>
         @empty
         <p class="text-gray-600 text-center">Belum ada penilaian yang sesuai filter.</p>

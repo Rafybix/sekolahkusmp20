@@ -13,8 +13,7 @@ return new class extends Migration
             $table->string('judul');               // Judul penilaian
             $table->date('tanggal')->nullable();   // Tanggal penilaian
             $table->text('deskripsi')->nullable(); // Deskripsi / catatan
-            $table->string('file_upload')->nullable(); // Nama file upload
-            $table->string('link')->nullable();     // Link tambahan
+            $table->json('file_upload')->nullable(); // Array JSON file + title
             $table->timestamps();
         });
     }
