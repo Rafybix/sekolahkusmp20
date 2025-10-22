@@ -27,6 +27,5 @@ class UserSeeder extends Seeder
         $user->assignRole('Admin');
 
         $this->command->info('Data User '.$user->name.' has been saved.');
-       
     }
 }
