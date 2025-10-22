@@ -35,16 +35,23 @@
     </header>
 
     <!-- Isi halaman -->
-    <main class="max-w-7xl mx-auto grid grid-cols-12 gap-6 mt-6 px-4">
-        {{-- Sidebar kiri --}}
+    <main class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 mt-6 px-4">
+    {{-- Sidebar kiri --}}
+    <div class="order-2 md:order-1 md:col-span-3">
         @includeIf('frontend.template.leftbar')
+    </div>
 
-        {{-- Konten utama --}}
+    {{-- Konten utama --}}
+    <div class="order-1 md:order-2 md:col-span-6">
         @yield('content')
+    </div>
 
-        {{-- Sidebar kanan --}}
+    {{-- Sidebar kanan --}}
+    <div class="order-3 md:order-3 md:col-span-3">
         @includeIf('frontend.template.rightbar')
-    </main>
+    </div>
+</main>
+
 
     <!-- Footer -->
     @includeIf('frontend.template.footer')

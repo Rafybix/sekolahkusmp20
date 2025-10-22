@@ -32,33 +32,34 @@
     $totalPages = ceil($berita->count() / $perPage);
 @endphp
 
-    <div class="grid grid-cols-2 gap-6">
-        @foreach ($beritaPage as $item)
-            <article class="bg-white shadow rounded-xl overflow-hidden flex flex-col">
-                <img src="{{ asset('storage/images/berita/' . $item->thumbnail) }}"
-                    alt="{{ $item->title }}"
-                    class="w-full h-40 object-cover">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    @foreach ($beritaPage as $item)
+        <article class="bg-white shadow rounded-xl overflow-hidden flex flex-col">
+            <img src="{{ asset('storage/images/berita/' . $item->thumbnail) }}"
+                alt="{{ $item->title }}"
+                class="w-full h-40 object-cover">
 
-                <div class="p-4 flex-1 flex flex-col">
-                    <h3 class="font-semibold text-gray-800">{{ $item->title }}</h3>
+            <div class="p-4 flex-1 flex flex-col">
+                <h3 class="font-semibold text-gray-800">{{ $item->title }}</h3>
 
-                    <p class="text-sm text-gray-500 flex items-center mt-1">
-                        <i class="far fa-calendar-alt mr-2"></i>
-                        {{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('j F Y') }}
-                    </p>
+                <p class="text-sm text-gray-500 flex items-center mt-1">
+                    <i class="far fa-calendar-alt mr-2"></i>
+                    {{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('j F Y') }}
+                </p>
 
-                    <p class="text-sm text-gray-600 mt-2 flex-1">
-                        {{ Str::limit(strip_tags($item->content), 100, '...') }}
-                    </p>
+                <p class="text-sm text-gray-600 mt-2 flex-1">
+                    {{ Str::limit(strip_tags($item->content), 100, '...') }}
+                </p>
 
-                    <a href="{{ route('detail.berita', $item->slug) }}"
-                        class="mt-3 inline-block text-center bg-gray-100 border border-gray-300 rounded-lg px-4 py-2 text-sm font-medium hover:bg-gray-200">
-                        Baca Selengkapnya
-                    </a>
-                </div>
-            </article>
-        @endforeach
-    </div>
+                <a href="{{ route('detail.berita', $item->slug) }}"
+                    class="mt-3 inline-block text-center bg-gray-100 border border-gray-300 rounded-lg px-4 py-2 text-sm font-medium hover:bg-gray-200">
+                    Baca Selengkapnya
+                </a>
+            </div>
+        </article>
+    @endforeach
+</div>
+
 
     <!-- PAGINATION -->
     @if ($totalPages > 1)
