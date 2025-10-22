@@ -4,10 +4,11 @@ use App\Http\Controllers\Backend\AlbumKegiatanController;
 use App\Http\Controllers\Backend\PhotoController;
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\Website\KategoriBeritaController;
-
+use App\Http\Controllers\Backend\Website\AkademikController;
 use Backend\ProfileController;
 
 use App\Http\Controllers\Frontend\IndexController;
+
 use App\Http\Controllers\Frontend\MenuController;
 use App\Http\Controllers\KontakController;
 use App\Http\Controllers\HomeController;
@@ -148,8 +149,6 @@ Route::resource('backend-kurikulum', Backend\Website\KurikulumController::class)
 
 Route::get('/penilaian', [PenilaianController::class, 'publicIndex'])->name('penilaian.front');
 
-
-
 Route::get('/artikel', [AlbumKegiatanController::class, 'frontendIndex'])->name('artikel');
 
 // Halaman daftar album
@@ -164,3 +163,14 @@ Route::get('/album/{id}', [AlbumKegiatanController::class, 'show'])->name('album
 
 Route::get('/struktur-kurikulum', [KurikulumController::class, 'tampilkan'])
     ->name('frontend.struktur-kurikulum');
+
+
+// program akademik
+Route::resource('backend-akademik', Backend\Website\AkademikController::class)
+    ->only(['index', 'create', 'store', 'destroy']);
+
+Route::get('/akademik', [AkademikController::class, 'frontendIndex'])->name('akademik');
+
+Route::prefix('backend')->name('backend-')->group(function () {
+    Route::resource('penilaian', PenilaianController::class);
+});
