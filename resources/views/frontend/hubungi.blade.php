@@ -46,7 +46,7 @@
     </div>
 
     <!-- Form Kontak -->
-    <div class="bg-white p-6 rounded-xl shadow mt-6">
+    <!-- <div class="bg-white p-6 rounded-xl shadow mt-6">
         <h2 class="text-2xl font-semibold text-black mb-4">Kirim Pesan</h2>
         <form id="hubungiForm" action="/kirim-pesan" method="POST" class="space-y-4">
             @csrf
@@ -62,7 +62,7 @@
         <div id="successMessage" class="hidden mt-4 bg-black/10 text-black p-3 rounded">
             Pesan berhasil dikirim!
         </div>
-    </div>
+    </div> -->
 
     <!-- Peta Lokasi -->
     <div class="mt-6 rounded-xl overflow-hidden shadow">
