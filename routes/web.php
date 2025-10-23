@@ -74,7 +74,7 @@ Route::view('/saran_mutu', 'frontend.saran_mutu')->name('saran_mutu');
 
 Route::view('/tujuan', 'frontend.tujuan')->name('tujuan');
 Route::view('/visi_misi', 'frontend.visi_misi')->name('visi_misi');
-Route::view('/sambutan', 'frontend.sambutan')->name('sambutan');
+Route::view('/sambutan', 'frontend.Sambutan')->name('sambutan');
 Route::view('/hubungi', 'frontend.hubungi')->name('hubungi');
 Route::view('/index', 'frontend.index')->name('index');
 // Kontak
